@@ -1,5 +1,5 @@
 #include <raylib.h>
-#include "Game.h"
+#include "..\include\Game.h"
 
 int main(){
 	InitWindow(screenWidth, screenHeight, "Testi");	
