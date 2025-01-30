@@ -44,6 +44,11 @@
 
 ## Ei-toiminnalliset vaatimukset  
 
+    - Pelissä tulee olla "pää luokka" Game, jonka kautta peli koostuu.  
+    - Pelin ohjelmoinnin tulee käyttää Olio ajattelua, muuta ei liian tiukasti.  
+    - Ohjelmoinnissa tulee käytttä camelCase tyyliä muuttuja nimille.  
+    - Luokkien nimet pitää olla isolla alkukirjaimella.  
+    - Globaalit ja vakiot tulee olla kokonaan isoilla kirjaimilla.  
     - Pelin pitää olla hauska.   
     - Pelin pitää olla helppo ymmärtää.  
     - Peli tulee olemaan paikallisesti pelattava, ilman mitään verkkopelaus mahdollisuutta.  
