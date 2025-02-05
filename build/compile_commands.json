@@ -13,6 +13,12 @@
 },
 {
   "directory": "C:/Users/jaakk/Desktop/OhjProjektiTITE23/build",
+  "command": "C:/msys64/mingw64/bin/g++.exe -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP @CMakeFiles/Samuli-Survivors.dir/includes_CXX.rsp -g -o CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj -c C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/SoundManager.cpp",
+  "file": "C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/SoundManager.cpp",
+  "output": "CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj"
+},
+{
+  "directory": "C:/Users/jaakk/Desktop/OhjProjektiTITE23/build",
   "command": "C:/msys64/mingw64/bin/g++.exe -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP @CMakeFiles/Samuli-Survivors.dir/includes_CXX.rsp -g -o CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj -c C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/main.cpp",
   "file": "C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/main.cpp",
   "output": "CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj"

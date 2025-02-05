@@ -294,6 +294,30 @@ src/Game.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Samuli-Survivors.dir/build.make CMakeFiles/Samuli-Survivors.dir/src/Game.cpp.s
 .PHONY : src/Game.cpp.s
 
+src/SoundManager.obj: src/SoundManager.cpp.obj
+.PHONY : src/SoundManager.obj
+
+# target to build an object file
+src/SoundManager.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Samuli-Survivors.dir/build.make CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj
+.PHONY : src/SoundManager.cpp.obj
+
+src/SoundManager.i: src/SoundManager.cpp.i
+.PHONY : src/SoundManager.i
+
+# target to preprocess a source file
+src/SoundManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Samuli-Survivors.dir/build.make CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.i
+.PHONY : src/SoundManager.cpp.i
+
+src/SoundManager.s: src/SoundManager.cpp.s
+.PHONY : src/SoundManager.s
+
+# target to generate assembly for a file
+src/SoundManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Samuli-Survivors.dir/build.make CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.s
+.PHONY : src/SoundManager.cpp.s
+
 src/main.obj: src/main.cpp.obj
 .PHONY : src/main.obj
 
@@ -343,6 +367,9 @@ help:
 	@echo "... src/Game.obj"
 	@echo "... src/Game.i"
 	@echo "... src/Game.s"
+	@echo "... src/SoundManager.obj"
+	@echo "... src/SoundManager.i"
+	@echo "... src/SoundManager.s"
 	@echo "... src/main.obj"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

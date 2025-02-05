@@ -102,11 +102,26 @@ CMakeFiles/Samuli-Survivors.dir/src/Game.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Samuli-Survivors.dir/src/Game.cpp.s"
 	C:/msys64/mingw64/bin/g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/Game.cpp -o CMakeFiles/Samuli-Survivors.dir/src/Game.cpp.s
 
+CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj: CMakeFiles/Samuli-Survivors.dir/flags.make
+CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj: CMakeFiles/Samuli-Survivors.dir/includes_CXX.rsp
+CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj: C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/SoundManager.cpp
+CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj: CMakeFiles/Samuli-Survivors.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:/Users/jaakk/Desktop/OhjProjektiTITE23/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj"
+	C:/msys64/mingw64/bin/g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj -MF CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj.d -o CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj -c C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/SoundManager.cpp
+
+CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.i"
+	C:/msys64/mingw64/bin/g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/SoundManager.cpp > CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.i
+
+CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.s"
+	C:/msys64/mingw64/bin/g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/SoundManager.cpp -o CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.s
+
 CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj: CMakeFiles/Samuli-Survivors.dir/flags.make
 CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj: CMakeFiles/Samuli-Survivors.dir/includes_CXX.rsp
 CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj: C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/main.cpp
 CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj: CMakeFiles/Samuli-Survivors.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:/Users/jaakk/Desktop/OhjProjektiTITE23/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:/Users/jaakk/Desktop/OhjProjektiTITE23/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj"
 	C:/msys64/mingw64/bin/g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj -MF CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj.d -o CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj -c C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/main.cpp
 
 CMakeFiles/Samuli-Survivors.dir/src/main.cpp.i: cmake_force
@@ -121,6 +136,7 @@ CMakeFiles/Samuli-Survivors.dir/src/main.cpp.s: cmake_force
 Samuli__Survivors_OBJECTS = \
 "CMakeFiles/Samuli-Survivors.dir/src/Character.cpp.obj" \
 "CMakeFiles/Samuli-Survivors.dir/src/Game.cpp.obj" \
+"CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj" \
 "CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj"
 
 # External object files for target Samuli-Survivors
@@ -128,12 +144,13 @@ Samuli__Survivors_EXTERNAL_OBJECTS =
 
 Samuli-Survivors.exe: CMakeFiles/Samuli-Survivors.dir/src/Character.cpp.obj
 Samuli-Survivors.exe: CMakeFiles/Samuli-Survivors.dir/src/Game.cpp.obj
+Samuli-Survivors.exe: CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj
 Samuli-Survivors.exe: CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj
 Samuli-Survivors.exe: CMakeFiles/Samuli-Survivors.dir/build.make
 Samuli-Survivors.exe: _deps/raylib-build/raylib/libraylib.a
 Samuli-Survivors.exe: CMakeFiles/Samuli-Survivors.dir/linkLibs.rsp
 Samuli-Survivors.exe: CMakeFiles/Samuli-Survivors.dir/objects1.rsp
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:/Users/jaakk/Desktop/OhjProjektiTITE23/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable Samuli-Survivors.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:/Users/jaakk/Desktop/OhjProjektiTITE23/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable Samuli-Survivors.exe"
 	"C:/Program Files/CMake/bin/cmake.exe" -E rm -f CMakeFiles/Samuli-Survivors.dir/objects.a
 	C:/msys64/mingw64/bin/ar.exe qc CMakeFiles/Samuli-Survivors.dir/objects.a @CMakeFiles/Samuli-Survivors.dir/objects1.rsp
 	C:/msys64/mingw64/bin/g++.exe -g -Wl,--whole-archive CMakeFiles/Samuli-Survivors.dir/objects.a -Wl,--no-whole-archive -o Samuli-Survivors.exe -Wl,--out-implib,libSamuli-Survivors.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles/Samuli-Survivors.dir/linkLibs.rsp

@@ -10,6 +10,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/Character.cpp" "CMakeFiles/Samuli-Survivors.dir/src/Character.cpp.obj" "gcc" "CMakeFiles/Samuli-Survivors.dir/src/Character.cpp.obj.d"
   "C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/Game.cpp" "CMakeFiles/Samuli-Survivors.dir/src/Game.cpp.obj" "gcc" "CMakeFiles/Samuli-Survivors.dir/src/Game.cpp.obj.d"
+  "C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/SoundManager.cpp" "CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj" "gcc" "CMakeFiles/Samuli-Survivors.dir/src/SoundManager.cpp.obj.d"
   "C:/Users/jaakk/Desktop/OhjProjektiTITE23/src/main.cpp" "CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj" "gcc" "CMakeFiles/Samuli-Survivors.dir/src/main.cpp.obj.d"
   )
 
