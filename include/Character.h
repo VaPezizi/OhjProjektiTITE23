@@ -2,7 +2,6 @@
 #include <raylib.h>
 #define _RAYLIB
 #endif
-#include <iostream> //TODO: Poista tää
 class Character{
 /*private: 
 	Character & operator=(const Character&) = delete;
@@ -21,8 +20,11 @@ public:
 		UnloadTexture(texture);
 	}
 	Character & operator=(const Character&){
-		std::cout << "MORO\n";
+		//std::cout << "MORO\n";
 		return *this;
 	}
 	void drawCharacter();
+
+	//Used to move the character by x and y values. 
+	void moveCharacter(float x, float y);
 };

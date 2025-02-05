@@ -60,8 +60,11 @@ void Game::closeGame(){
 }
 //Empty for now, but updates should be done (or called), from this function.
 void Game::updateGame(){
-
+	this->characters.front().moveCharacter(-1.0f, 0.0f);
 }
 void Game::addCharacter(Character& character){
 	this->characters.push_back(character);
+}
+void Game::addCharacter(float posX, float posY, const char* fileName){
+	this->characters.push_back((Character){posX, posY, fileName});
 }

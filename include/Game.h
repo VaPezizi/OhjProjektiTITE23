@@ -41,4 +41,5 @@ public:
 	void drawGame();		//Most draw calls should be made / called from here
 	void updateGame();		//Game updates should be made / called from here
 	void addCharacter(Character& character);
+	void addCharacter(float posX, float posY, const char* fileName);
 };
