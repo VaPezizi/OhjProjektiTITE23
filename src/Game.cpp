@@ -1,7 +1,6 @@
-#ifndef _GAME
-#define _GAME
 #include "Game.h"
-#endif
+#include "Character.h"
+
 
 #ifndef _VECTOR
 #define _VECTOR
