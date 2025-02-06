@@ -2,8 +2,9 @@
 #include <raylib.h>
 #define _RAYLIB
 #endif
+#include <string>
 
-
+#include <TextureManager.h>
 #ifndef _CHARACTER
 #define _CHARACTER
 
@@ -14,15 +15,17 @@ class Character{
 */	
 protected: 
 	Vector2 position;
-	Texture2D texture;
+	std::string texture;
+	TextureManager * textures;
 
 public:
-	Character(const float& posX, const float& posY, const char* textureFileName){
+	Character(const float& posX, const float& posY, const std::string& fileName, TextureManager * textures){
 		this->position = (Vector2){posX, posY};
-		this->texture = LoadTexture(textureFileName);
+		this->texture = fileName;
+		this->textures = textures;
+		textures->loadTexture(fileName);
 	}
 	~Character(){
-		UnloadTexture(texture);
 	}
 	Character & operator=(const Character&){
 		//std::cout << "MORO\n";

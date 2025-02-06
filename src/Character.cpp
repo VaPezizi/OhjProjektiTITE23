@@ -5,7 +5,8 @@
 #endif
 
 void Character::drawCharacter(){
-	DrawTexture(this->texture, this->position.x, this->position.y, WHITE);
+	this->textures->drawTexture(this->texture, this->position.x, this->position.y);
+	//DrawTexture(textures->getTexture(this->texture), this->position.x, this->position.y, WHITE);
 }
 void Character::moveCharacter(float x, float y){
 	this->position.x += x;

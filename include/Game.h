@@ -11,6 +11,7 @@
 
 #include "Character.h"
 #include "SoundManager.h"
+#include "TextureManager.h"
 
 #ifndef _GAME
 #define _GAME
@@ -28,6 +29,7 @@ protected:
 
 private:
 	SoundManager soundManager;
+	TextureManager textureManager;
 
 public: 
 	Game(const int& screenWidth, const int& screenHeight, const int& FPS){

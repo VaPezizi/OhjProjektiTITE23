@@ -14,7 +14,7 @@
 
 #include "Nappi.h"
 
-// Create buttons
+// Create buttons		//TODO: Tehdään joku menu luokka tai joku semmonen johna tehdään napit.
 Nappi startButton(200, 150, 150, 50, "start", GREEN);
 Nappi exitButton(200, 250, 150, 50, "exit", RED);
 Nappi resizeButton(200, 350, 150, 50, "resize", BLUE);
@@ -30,7 +30,7 @@ void Game::initGame(const char* windowName){
 
 //Game main loop is here
 void Game::startMainLoop(){
-	Character testi = Character((float) screenWidth / 2, (float) screenHeight / 2, "assets/testTexture.png");
+	Character testi = Character((float) screenWidth / 2, (float) screenHeight / 2, "assets/testTexture.png", &this->textureManager);
 	//addCharacter(Character((float) screenWidth / 2, (float) screenHeight / 2, "assets/testTexture.png"));
 	addCharacter(testi);
 	//addCharacter(Character(screenWidth / 2, screenHeight / 2, "assets/testTexture.png"));
@@ -61,6 +61,7 @@ void Game::drawGame(){
 	DrawText("Hello World", this->screenWidth / 2, this->screenHeight / 2, 20, BLACK);
 
 	for(Character& c : this->characters){
+		//c.drawCharacter(&this->textureManager);
 		c.drawCharacter();
 	}	
 	EndDrawing();
@@ -69,6 +70,7 @@ void Game::drawGame(){
 //Put everything you want to do before the game closes here
 //(If you use memory, you should free it here, if nowhere else)
 void Game::closeGame(){
+	this->textureManager.unloadAllTextures();
 	this->characters.clear();
 	soundManager.unloadAllSounds();
 	CloseWindow();
@@ -81,5 +83,5 @@ void Game::addCharacter(Character& character){
 	this->characters.push_back(character);
 }
 void Game::addCharacter(float posX, float posY, const char* fileName){
-	this->characters.push_back((Character){posX, posY, fileName});
+	this->characters.push_back((Character){posX, posY, fileName, &this->textureManager});
 }
