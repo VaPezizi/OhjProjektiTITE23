@@ -12,6 +12,14 @@
 #define _CHARACTER
 #include "Character.h"
 #endif
+
+#include "Nappi.h"
+
+// Create buttons
+Nappi startButton(200, 150, 150, 50, "start", GREEN);
+Nappi exitButton(200, 250, 150, 50, "exit", RED);
+Nappi resizeButton(200, 350, 150, 50, "resize", BLUE);
+
 //At this point, only initializes window and OpenGL context, but this function will expand
 void Game::initGame(const char* windowName){
 	InitWindow(this->screenWidth, this->screenHeight, windowName);
@@ -42,8 +50,13 @@ void Game::drawGame(){
 	//We can draw in other places if needed, but opening draw mode has to be done there then.
 
 	BeginDrawing();
-
 	ClearBackground(WHITE);
+
+	// Draw buttons
+	startButton.draw();
+	exitButton.draw();
+	resizeButton.draw();
+
 	DrawText("Hello World", this->screenWidth / 2, this->screenHeight / 2, 20, BLACK);
 
 	for(Character& c : this->characters){
