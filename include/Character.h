@@ -5,6 +5,7 @@
 #include <string>
 
 #include <TextureManager.h>
+
 #ifndef _CHARACTER
 #define _CHARACTER
 
