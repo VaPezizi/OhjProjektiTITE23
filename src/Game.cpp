@@ -15,6 +15,8 @@
 //At this point, only initializes window and OpenGL context, but this function will expand
 void Game::initGame(const char* windowName){
 	InitWindow(this->screenWidth, this->screenHeight, windowName);
+	soundManager.loadSound("background", "assets/sounds/bg.mp3"); // Load background sound
+    soundManager.playSound("background"); // Play background sound
 	startMainLoop();
 
 }
@@ -56,6 +58,7 @@ void Game::drawGame(){
 //(If you use memory, you should free it here, if nowhere else)
 void Game::closeGame(){
 	this->characters.clear();
+	soundManager.unloadAllSounds();
 	CloseWindow();
 }
 //Empty for now, but updates should be done (or called), from this function.

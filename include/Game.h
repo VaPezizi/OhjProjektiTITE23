@@ -14,6 +14,11 @@
 #include "Character.h"
 #endif
 
+#ifndef _SOUNDMANAGER
+#define _SOUNDMANAGER
+#include "SoundManager.h"
+#endif
+
 class Game{
 protected:
 	int screenWidth = 800;	
@@ -24,6 +29,10 @@ protected:
 	bool fullScreen = 0;
 
 	std::vector<Character> characters;
+
+private:
+	SoundManager soundManager;
+
 public: 
 	Game(const int& screenWidth, const int& screenHeight, const int& FPS){
 		this->screenWidth = screenWidth;
