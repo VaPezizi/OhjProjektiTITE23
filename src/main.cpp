@@ -2,11 +2,8 @@
 #define _RAYLIB
 #include <raylib.h>
 #endif
-
-#ifndef _GAME
-#define _GAME
 #include "Game.h"
-#endif
+
 #ifndef STD
 #define STD
 #include <iostream>

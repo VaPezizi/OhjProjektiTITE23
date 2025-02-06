@@ -9,15 +9,11 @@
 #include <vector>
 #endif
 
-#ifndef _CHARACTER
-#define _CHARACTER
 #include "Character.h"
-#endif
-
-#ifndef _SOUNDMANAGER
-#define _SOUNDMANAGER
 #include "SoundManager.h"
-#endif
+
+#ifndef _GAME
+#define _GAME
 
 class Game{
 protected:
@@ -52,3 +48,4 @@ public:
 	void addCharacter(Character& character);
 	void addCharacter(float posX, float posY, const char* fileName);
 };
+#endif

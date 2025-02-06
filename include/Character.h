@@ -2,6 +2,11 @@
 #include <raylib.h>
 #define _RAYLIB
 #endif
+
+
+#ifndef _CHARACTER
+#define _CHARACTER
+
 class Character{
 /*private: 
 	Character & operator=(const Character&) = delete;
@@ -28,3 +33,4 @@ public:
 	//Used to move the character by x and y values. 
 	void moveCharacter(float x, float y);
 };
+#endif

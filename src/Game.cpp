@@ -1,17 +1,12 @@
-#ifndef _GAME
-#define _GAME
 #include "Game.h"
-#endif
+#include "Character.h"
+
 
 #ifndef _VECTOR
 #define _VECTOR
 #include <vector>
 #endif
 
-#ifndef _CHARACTER
-#define _CHARACTER
-#include "Character.h"
-#endif
 //At this point, only initializes window and OpenGL context, but this function will expand
 void Game::initGame(const char* windowName){
 	InitWindow(this->screenWidth, this->screenHeight, windowName);
