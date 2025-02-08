@@ -12,18 +12,28 @@
 #include "Character.h"
 #endif
 
+#include "Menu.h"
+#include "Text.h"
 #include "Nappi.h"
 
 // Create buttons		//TODO: Tehdään joku menu luokka tai joku semmonen johna tehdään napit.
-Nappi startButton(200, 150, 150, 50, "start", GREEN);
-Nappi exitButton(200, 250, 150, 50, "exit", RED);
-Nappi resizeButton(200, 350, 150, 50, "resize", BLUE);
+//Nappi startButton(200, 150, 150, 50, "start", GREEN);
+//Nappi exitButton(200, 250, 150, 50, "exit", RED);
+//Nappi resizeButton(200, 350, 150, 50, "resize", BLUE);
 
 //At this point, only initializes window and OpenGL context, but this function will expand
 void Game::initGame(const char* windowName){
 	InitWindow(this->screenWidth, this->screenHeight, windowName);
 	soundManager.loadSound("background", "assets/sounds/bg.mp3"); // Load background sound
-    soundManager.playSound("background"); // Play background sound
+ 	soundManager.playSound("background"); // Play background sound
+					      
+	this->menu = Menu();
+	menu.addButton(Nappi(200, 150, 150, 50, "start", GREEN)); 
+	menu.addButton(Nappi(200, 250, 150, 50, "exit", RED)); 
+	menu.addButton(Nappi(200, 350, 150, 50, "resize", BLUE)); 
+
+	menu.addText(Text("Hello World", (Vector2){200, 200}, 16, BLACK));
+
 	startMainLoop();
 
 }
@@ -54,11 +64,20 @@ void Game::drawGame(){
 	ClearBackground(WHITE);
 
 	// Draw buttons
+	/*
 	startButton.draw();
 	exitButton.draw();
 	resizeButton.draw();
+	*/
 
-	DrawText("Hello World", this->screenWidth / 2, this->screenHeight / 2, 20, BLACK);
+	for(Nappi& n : this->menu.getButtons()){
+		n.draw();	
+	}
+	for(Text& t : this->menu.getTexts()){
+		t.draw();
+	}
+
+	//DrawText("Hello World", this->screenWidth / 2, this->screenHeight / 2, 20, BLACK);
 
 	for(Character& c : this->characters){
 		//c.drawCharacter(&this->textureManager);
