@@ -12,6 +12,7 @@
 #include "Character.h"
 #include "SoundManager.h"
 #include "TextureManager.h"
+#include "Menu.h"
 
 #ifndef _GAME
 #define _GAME
@@ -24,9 +25,10 @@ protected:
 	Vector2 mousePos;
 
 	bool fullScreen = 0;
-
+	
+	Menu menu;
 	std::vector<Character> characters;
-
+	
 private:
 	SoundManager soundManager;
 	TextureManager textureManager;
