@@ -1,0 +1,9 @@
+Scene luokka.
+
+Scene luokalla korvataan tarve erilliselle Menu oliolle ja vektoreille piirrettävistä asioista Game luokassa. 
+Scene luokka tulee sisältämään: Menu olio (UI Elementeille), vectori (Hahmoille), tulevaisuudessa kenties vektori muille piirrettäville olioille.
+
+Game luokkaan tulee muuttuja joka määrittää tämänhetkisen scenen
+Game luokan update ja piirto funktiot tulevat muuttumaan, siten että ne kutsuvat uuden scene luokan olioiden piirto ja päivitys funktioita.
+
+Scene luokan piirto tulee sisältämään näkymä specifit kohdat.
