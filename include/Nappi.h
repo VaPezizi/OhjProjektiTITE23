@@ -9,6 +9,8 @@ public:
     Nappi(float x, float y, float width, float height, std::string text, Color color); // Constructor
     void draw();  // Draw the button
     bool isClicked(); // Check if the button is clicked
+    std::string getText() const; // Get the text of the button
+    void setPosition(float x, float y); // Set the position of the button
 
 private: 
     Rectangle rect; // Rectangle of the button

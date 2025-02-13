@@ -17,6 +17,8 @@ public:
 	std::vector<Text>& getTexts();
 	void removeButtons();
 	void removeTexts();
+	void moveButtonsToTop(); // Move buttons to top
+	void removeStartButton(); // Remove start button
 };
 
 #endif
