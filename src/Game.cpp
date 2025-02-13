@@ -104,6 +104,7 @@ void Game::closeGame(){
 	this->characters.clear();
 	soundManager.unloadAllSounds();
 	CloseWindow();
+	exit(0);
 }
 
 void Game::updateGame(){
@@ -114,48 +115,48 @@ void Game::updateGame(){
 		toggleFullScreen(); // Toggle fullscreen
 	}
 	
-		if (!isGameRunning) {  
-			for (Nappi& n : this->menu.getButtons()) { // Check if any button is clicked during the main menu
-				if (n.isClicked()) { // If button is clicked
-					std::cout << "Nappi painettu: " << n.getText() << std::endl; // 🔍 DEBUG
-	
-					if (n.getText() == "start") { // If start button is clicked
-						std::cout << "Start button clicked - Peli alkaa!" << std::endl; //  DEBUG
-						isGameRunning = true; // Set game running to true
-						menu.removeStartButton(); // Remove start button
-						menu.moveButtonsToTop(); // Move buttons to top
-						lastResizeTime = GetTime(); // Set last resize time
-					}
-					else if (n.getText() == "exit") { // If exit button is clicked
-						std::cout << "Exit button clicked - Suljetaan sovellus" << std::endl;
-						exit(0); // Exit the application
-					}
-					else if (n.getText() == "resize") { // If resize button is clicked
-						std::cout << "Resize button clicked - Vaihdetaan ikkunan tila" << std::endl;
-						toggleFullScreen(); // Toggle fullscreen
-					}
+	if (!isGameRunning) {  
+		for (Nappi& n : this->menu.getButtons()) { // Check if any button is clicked during the main menu
+			if (n.isClicked()) { // If button is clicked
+				std::cout << "Nappi painettu: " << n.getText() << std::endl; // 🔍 DEBUG
+
+				if (n.getText() == "start") { // If start button is clicked
+					std::cout << "Start button clicked - Peli alkaa!" << std::endl; //  DEBUG
+					isGameRunning = true; // Set game running to true
+					menu.removeStartButton(); // Remove start button
+					menu.moveButtonsToTop(); // Move buttons to top
+					lastResizeTime = GetTime(); // Set last resize time
+				}
+				else if (n.getText() == "exit") { // If exit button is clicked
+					std::cout << "Exit button clicked - Suljetaan sovellus" << std::endl;
+					this->closeGame();
+					//exit(0); // Exit the application
+				}
+				else if (n.getText() == "resize") { // If resize button is clicked
+					std::cout << "Resize button clicked - Vaihdetaan ikkunan tila" << std::endl;
+					toggleFullScreen(); // Toggle fullscreen
 				}
 			}
-		} 
-		else {  
-			for (Nappi& n : this->menu.getButtons()) { // Check if any button is clicked during the game
-				if (n.isClicked()) { // If button is clicked
-					std::cout << "Pelin aikana Nappi painettu: " << n.getText() << std::endl; // 🔍 DEBUG
-	
-					if (n.getText() == "exit") { // If exit button is clicked
-						std::cout << "Exit button clicked - Palataan aloitusvalikkoon!" << std::endl;
-						resetToMainMenu(); // Reset to main menu
-					}
-					else if (n.getText() == "resize") { // If resize button is clicked
-						std::cout << "Resize button clicked - Vaihdetaan ikkunan tila pelin aikana" << std::endl;
-						toggleFullScreen(); // Toggle fullscreen
-					}
+		}
+	} 
+	else {  
+		for (Nappi& n : this->menu.getButtons()) { // Check if any button is clicked during the game
+			if (n.isClicked()) { // If button is clicked
+				std::cout << "Pelin aikana Nappi painettu: " << n.getText() << std::endl; // 🔍 DEBUG
+
+				if (n.getText() == "exit") { // If exit button is clicked
+					std::cout << "Exit button clicked - Palataan aloitusvalikkoon!" << std::endl;
+					resetToMainMenu(); // Reset to main menu
+				}
+				else if (n.getText() == "resize") { // If resize button is clicked
+					std::cout << "Resize button clicked - Vaihdetaan ikkunan tila pelin aikana" << std::endl;
+					toggleFullScreen(); // Toggle fullscreen
 				}
 			}
 		}
 	}
 
-
+}
 void Game::addCharacter(Character& character){
 	this->characters.push_back(character);
 }
