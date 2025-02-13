@@ -13,5 +13,18 @@ void Nappi::draw() { // Draw the button
 
 bool Nappi::isClicked() { // Check if the button is clicked
     // Return true if the left mouse button is pressed and the mouse is over the button
-    return (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), rect)); 
+
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(GetMousePosition(), rect)) {
+        return true;
+    }
+    return false;
+}
+
+std::string Nappi::getText() const {
+    return this->text;
+}
+
+void Nappi::setPosition(float x, float y) {
+    this->rect.x = x;
+    this->rect.y = y;
 }

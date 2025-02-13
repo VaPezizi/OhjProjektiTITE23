@@ -22,16 +22,25 @@ protected:
 	int screenWidth = 800;	
 	int screenHeight = 600;
 
-	Vector2 mousePos;
+    int windowPosX = 100; // Window position X
+    int windowPosY = 100; // Window position Y
 
-	bool fullScreen = 0;
+	Vector2 mousePos; 
+
+	bool fullScreen = 0; 
 	
 	Menu menu;
 	std::vector<Character> characters;
+
+	bool isGameRunning = false; 
+
+	double lastResizeTime = 0; // Last resize time
+
 	
 private:
 	SoundManager soundManager;
 	TextureManager textureManager;
+	void resetToMainMenu(); // Reset to main menu
 
 public: 
 	Game(const int& screenWidth, const int& screenHeight, const int& FPS){
@@ -43,6 +52,8 @@ public:
 		this->mousePos = (Vector2){0,0};
 	}
 
+	void updateButtonPositions();
+
 	Vector2& getScreenDimensions();
 	void initGame(const char* windowName);	//Inits the game, with a given name
 	void closeGame();		//Closes the game, this is where frees should be called from, if nowhere else
@@ -51,5 +62,6 @@ public:
 	void updateGame();		//Game updates should be made / called from here
 	void addCharacter(Character& character);
 	void addCharacter(float posX, float posY, const char* fileName);
+	void toggleFullScreen(); // Toggle fullscreen
 };
 #endif
