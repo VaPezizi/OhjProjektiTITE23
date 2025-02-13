@@ -1,7 +1,6 @@
-#ifndef _GAME
-#define _GAME
 #include "Game.h"
-#endif
+#include "Character.h"
+
 
 #ifndef _VECTOR
 #define _VECTOR
@@ -13,23 +12,35 @@
 #include "Character.h"
 #endif
 
+#include "Menu.h"
+#include "Text.h"
 #include "Nappi.h"
 
-// Create buttons
-Nappi startButton(200, 150, 150, 50, "start", GREEN);
-Nappi exitButton(200, 250, 150, 50, "exit", RED);
-Nappi resizeButton(200, 350, 150, 50, "resize", BLUE);
+// Create buttons		//TODO: Tehdään joku menu luokka tai joku semmonen johna tehdään napit.
+//Nappi startButton(200, 150, 150, 50, "start", GREEN);
+//Nappi exitButton(200, 250, 150, 50, "exit", RED);
+//Nappi resizeButton(200, 350, 150, 50, "resize", BLUE);
 
 //At this point, only initializes window and OpenGL context, but this function will expand
 void Game::initGame(const char* windowName){
 	InitWindow(this->screenWidth, this->screenHeight, windowName);
+	soundManager.loadSound("background", "assets/sounds/bg.mp3"); // Load background sound
+ 	soundManager.playSound("background"); // Play background sound
+					      
+	this->menu = Menu();
+	menu.addButton(Nappi(200, 150, 150, 50, "start", GREEN)); 
+	menu.addButton(Nappi(200, 250, 150, 50, "exit", RED)); 
+	menu.addButton(Nappi(200, 350, 150, 50, "resize", BLUE)); 
+
+	menu.addText(Text("Hello World", (Vector2){200, 200}, 16, BLACK));
+
 	startMainLoop();
 
 }
 
 //Game main loop is here
 void Game::startMainLoop(){
-	Character testi = Character((float) screenWidth / 2, (float) screenHeight / 2, "assets/testTexture.png");
+	Character testi = Character((float) screenWidth / 2, (float) screenHeight / 2, "assets/testTexture.png", &this->textureManager);
 	//addCharacter(Character((float) screenWidth / 2, (float) screenHeight / 2, "assets/testTexture.png"));
 	addCharacter(testi);
 	//addCharacter(Character(screenWidth / 2, screenHeight / 2, "assets/testTexture.png"));
@@ -53,13 +64,23 @@ void Game::drawGame(){
 	ClearBackground(WHITE);
 
 	// Draw buttons
+	/*
 	startButton.draw();
 	exitButton.draw();
 	resizeButton.draw();
+	*/
 
-	DrawText("Hello World", this->screenWidth / 2, this->screenHeight / 2, 20, BLACK);
+	for(Nappi& n : this->menu.getButtons()){
+		n.draw();	
+	}
+	for(Text& t : this->menu.getTexts()){
+		t.draw();
+	}
+
+	//DrawText("Hello World", this->screenWidth / 2, this->screenHeight / 2, 20, BLACK);
 
 	for(Character& c : this->characters){
+		//c.drawCharacter(&this->textureManager);
 		c.drawCharacter();
 	}	
 	EndDrawing();
@@ -68,7 +89,9 @@ void Game::drawGame(){
 //Put everything you want to do before the game closes here
 //(If you use memory, you should free it here, if nowhere else)
 void Game::closeGame(){
+	this->textureManager.unloadAllTextures();
 	this->characters.clear();
+	soundManager.unloadAllSounds();
 	CloseWindow();
 }
 //Empty for now, but updates should be done (or called), from this function.
@@ -79,5 +102,5 @@ void Game::addCharacter(Character& character){
 	this->characters.push_back(character);
 }
 void Game::addCharacter(float posX, float posY, const char* fileName){
-	this->characters.push_back((Character){posX, posY, fileName});
+	this->characters.push_back((Character){posX, posY, fileName, &this->textureManager});
 }

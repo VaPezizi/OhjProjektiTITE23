@@ -9,10 +9,13 @@
 #include <vector>
 #endif
 
-#ifndef _CHARACTER
-#define _CHARACTER
 #include "Character.h"
-#endif
+#include "SoundManager.h"
+#include "TextureManager.h"
+#include "Menu.h"
+
+#ifndef _GAME
+#define _GAME
 
 class Game{
 protected:
@@ -22,8 +25,14 @@ protected:
 	Vector2 mousePos;
 
 	bool fullScreen = 0;
-
+	
+	Menu menu;
 	std::vector<Character> characters;
+	
+private:
+	SoundManager soundManager;
+	TextureManager textureManager;
+
 public: 
 	Game(const int& screenWidth, const int& screenHeight, const int& FPS){
 		this->screenWidth = screenWidth;
@@ -43,3 +52,4 @@ public:
 	void addCharacter(Character& character);
 	void addCharacter(float posX, float posY, const char* fileName);
 };
+#endif
