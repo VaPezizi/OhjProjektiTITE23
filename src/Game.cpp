@@ -195,8 +195,8 @@ void Game::resetToMainMenu() {
 void Game::makeMenu2(){
 	scenes.push_back(Scene());
 	Menu& menu = scenes[currentScene + 1].getMenu();
-	menu.addButton(Nappi(100, 50, 150, 50, "Morjensta", YELLOW));	
-	menu.addButton(Nappi(100, 150, 150, 50, "Terve vaan", GREEN));	
+	menu.addButton(Nappi(100, 50, 150, 50, "resize", BLUE));	
+	menu.addButton(Nappi(100, 150, 150, 50, "exit", RED));	
 
 	//isGameRunning = true;
 	//currentScene = 1;
