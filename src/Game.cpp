@@ -28,7 +28,7 @@ void Game::initGame(const char* windowName){
  	soundManager.playSound("background"); // Play background sound
 	
 	makeMainMenu();
-
+	makeMenu2();
 	startMainLoop();
 
 }
@@ -113,7 +113,7 @@ void Game::updateGame(){
 		std::cout << "F11 painettu - Vaihdetaan ikkunan tilaa" << std::endl;
 		toggleFullScreen(); // Toggle fullscreen
 	}
-	
+/*	
 	if (!isGameRunning) {  
 		for (Nappi& n : this->scenes[currentScene].getMenu().getButtons()) { // Check if any button is clicked during the main menu
 			if (n.isClicked()) { // If button is clicked
@@ -153,6 +153,23 @@ void Game::updateGame(){
 				}
 			}
 		}
+	}*/
+	for(Nappi& n : this->scenes[currentScene].getMenu().getButtons()){
+		if(n.isClicked()){
+			if(n.getText() == "start"){
+				currentScene = 1;
+			}
+			if(n.getText() == "exit" && !isGameRunning){
+				//currentScene = 1;
+				closeGame();
+			}
+			else if(n.getText() == "exit")
+				currentScene = 0;
+			if(n.getText() == "resize"){
+				toggleFullScreen();
+			}
+		}
+		
 	}
 
 }
@@ -176,7 +193,13 @@ void Game::resetToMainMenu() {
 }
 
 void Game::makeMenu2(){
+	scenes.push_back(Scene());
+	Menu& menu = scenes[currentScene + 1].getMenu();
+	menu.addButton(Nappi(100, 50, 150, 50, "Morjensta", YELLOW));	
+	menu.addButton(Nappi(100, 150, 150, 50, "Terve vaan", GREEN));	
 
+	//isGameRunning = true;
+	//currentScene = 1;
 }
 
 void Game::makeMainMenu(){

@@ -1,7 +1,7 @@
 #include "Scene.h"
 #include <vector>
 
-Scene::Scene(){
+Scene::Scene(){		//TODO: Lisää tänne taustakuva 
 	this->characters = std::vector<Character>();
 	characters.reserve(50);		
 	this->menu = Menu();

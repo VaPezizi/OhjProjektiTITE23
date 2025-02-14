@@ -1,14 +1,16 @@
 #ifndef _SCENE
 #define _SCENE
+#include <string>
 #include <vector>
 #include "Menu.h"
 #include "Character.h"
 
-class Scene{
+class Scene{		//TODO: Lisää tänne taustakuva hommat
 private:
 	std::vector<Character> characters;
 	TextureManager * textureManager;
 	Menu menu;
+	std::string taustaKuva;
 public:
 	Scene();
 	Scene(Menu& menu, std::vector<Character>&characters);
