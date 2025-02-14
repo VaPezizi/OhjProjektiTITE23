@@ -158,13 +158,16 @@ void Game::updateGame(){
 		if(n.isClicked()){
 			if(n.getText() == "start"){
 				currentScene = 1;
+				isGameRunning = true;
 			}
 			if(n.getText() == "exit" && !isGameRunning){
 				//currentScene = 1;
 				closeGame();
 			}
-			else if(n.getText() == "exit")
+			else if(n.getText() == "exit"){
+				isGameRunning = false;
 				currentScene = 0;
+			}
 			if(n.getText() == "resize"){
 				toggleFullScreen();
 			}
