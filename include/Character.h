@@ -4,7 +4,7 @@
 #endif
 #include <string>
 
-#include <TextureManager.h>
+#include "TextureManager.h"
 
 #ifndef _CHARACTER
 #define _CHARACTER

@@ -26,17 +26,12 @@ void Game::initGame(const char* windowName){
 	InitWindow(this->screenWidth, this->screenHeight, windowName);
 	soundManager.loadSound("background", "assets/sounds/bg.mp3"); // Load background sound
  	soundManager.playSound("background"); // Play background sound
-					      
-	this->menu = Menu();
-	menu.addButton(Nappi(200, 150, 150, 50, "start", GREEN)); 
-	menu.addButton(Nappi(200, 250, 150, 50, "exit", RED)); 
-	menu.addButton(Nappi(200, 350, 150, 50, "resize", BLUE)); 
-
-	menu.addText(Text("Hello World", (Vector2){200, 200}, 16, BLACK));
-
+	
+	makeMainMenu();
+	makeMenu2();
 	startMainLoop();
 
-	}
+}
 
 
 //Game main loop is here
@@ -59,7 +54,9 @@ void Game::startMainLoop(){
 
 //All drawing should be done in this function
 void Game::drawGame(){
-
+	
+	Menu& menu = this->scenes[currentScene].getMenu();
+	std::vector<Character>& characters = this->scenes[currentScene].getCharacters();
 	//Starts Draw mode, all draw calls should be made here (if possible)
 	//We can draw in other places if needed, but opening draw mode has to be done there then.
 
@@ -67,10 +64,10 @@ void Game::drawGame(){
 	ClearBackground(WHITE);
 
 	if (!isGameRunning) {
-		for (Nappi& n : this->menu.getButtons()) {
+		for (Nappi& n : menu.getButtons()) {
 			n.draw();
 		}
-		for (Text& t : this ->menu.getTexts()) {
+		for (Text& t : menu.getTexts()) {
 			t.draw();
 		}
 	} 
@@ -81,16 +78,16 @@ void Game::drawGame(){
 	resizeButton.draw();
 	*/
 
-	for(Nappi& n : this->menu.getButtons()){
+	for(Nappi& n : menu.getButtons()){
 		n.draw();	
 	}
-	for(Text& t : this->menu.getTexts()){
+	for(Text& t : menu.getTexts()){
 		t.draw();
 	}
 
 	//DrawText("Hello World", this->screenWidth / 2, this->screenHeight / 2, 20, BLACK);
 
-	for(Character& c : this->characters){
+	for(Character& c : characters){
 		//c.drawCharacter(&this->textureManager);
 		c.drawCharacter();
 	}	
@@ -101,75 +98,122 @@ void Game::drawGame(){
 //(If you use memory, you should free it here, if nowhere else)
 void Game::closeGame(){
 	this->textureManager.unloadAllTextures();
-	this->characters.clear();
+	for(auto& i:this->scenes){
+		i.getCharacters().clear();
+	}
 	soundManager.unloadAllSounds();
 	CloseWindow();
+	exit(0);
 }
 
 void Game::updateGame(){
-	this->characters.front().moveCharacter(-1.0f, 0.0f); // Move the first character
+	this->scenes[currentScene].getCharacters().front().moveCharacter(-1.0f, 0.0f); // Move the first character
 
 	if (IsKeyPressed(KEY_F11)) { // If F11 is pressed
 		std::cout << "F11 painettu - Vaihdetaan ikkunan tilaa" << std::endl;
 		toggleFullScreen(); // Toggle fullscreen
 	}
-	
-		if (!isGameRunning) {  
-			for (Nappi& n : this->menu.getButtons()) { // Check if any button is clicked during the main menu
-				if (n.isClicked()) { // If button is clicked
-					std::cout << "Nappi painettu: " << n.getText() << std::endl; // 🔍 DEBUG
-	
-					if (n.getText() == "start") { // If start button is clicked
-						std::cout << "Start button clicked - Peli alkaa!" << std::endl; //  DEBUG
-						isGameRunning = true; // Set game running to true
-						menu.removeStartButton(); // Remove start button
-						menu.moveButtonsToTop(); // Move buttons to top
-						lastResizeTime = GetTime(); // Set last resize time
-					}
-					else if (n.getText() == "exit") { // If exit button is clicked
-						std::cout << "Exit button clicked - Suljetaan sovellus" << std::endl;
-						exit(0); // Exit the application
-					}
-					else if (n.getText() == "resize") { // If resize button is clicked
-						std::cout << "Resize button clicked - Vaihdetaan ikkunan tila" << std::endl;
-						toggleFullScreen(); // Toggle fullscreen
-					}
+/*	
+	if (!isGameRunning) {  
+		for (Nappi& n : this->scenes[currentScene].getMenu().getButtons()) { // Check if any button is clicked during the main menu
+			if (n.isClicked()) { // If button is clicked
+				std::cout << "Nappi painettu: " << n.getText() << std::endl; // 🔍 DEBUG
+
+				if (n.getText() == "start") { // If start button is clicked
+					std::cout << "Start button clicked - Peli alkaa!" << std::endl; //  DEBUG
+					isGameRunning = true; // Set game running to true
+					this->scenes[currentScene].getMenu().removeStartButton(); // Remove start button
+					this->scenes[currentScene].getMenu().moveButtonsToTop(); // Move buttons to top
+					lastResizeTime = GetTime(); // Set last resize time
 				}
-			}
-		} 
-		else {  
-			for (Nappi& n : this->menu.getButtons()) { // Check if any button is clicked during the game
-				if (n.isClicked()) { // If button is clicked
-					std::cout << "Pelin aikana Nappi painettu: " << n.getText() << std::endl; // 🔍 DEBUG
-	
-					if (n.getText() == "exit") { // If exit button is clicked
-						std::cout << "Exit button clicked - Palataan aloitusvalikkoon!" << std::endl;
-						resetToMainMenu(); // Reset to main menu
-					}
-					else if (n.getText() == "resize") { // If resize button is clicked
-						std::cout << "Resize button clicked - Vaihdetaan ikkunan tila pelin aikana" << std::endl;
-						toggleFullScreen(); // Toggle fullscreen
-					}
+				else if (n.getText() == "exit") { // If exit button is clicked
+					std::cout << "Exit button clicked - Suljetaan sovellus" << std::endl;
+					this->closeGame();
+					//exit(0); // Exit the application
+				}
+				else if (n.getText() == "resize") { // If resize button is clicked
+					std::cout << "Resize button clicked - Vaihdetaan ikkunan tila" << std::endl;
+					toggleFullScreen(); // Toggle fullscreen
 				}
 			}
 		}
+	} 
+	else { 		 
+		for (Nappi& n : this->scenes[currentScene].getMenu().getButtons()) { // Check if any button is clicked during the game
+			if (n.isClicked()) { // If button is clicked
+				std::cout << "Pelin aikana Nappi painettu: " << n.getText() << std::endl; // 🔍 DEBUG
+
+				if (n.getText() == "exit") { // If exit button is clicked
+					std::cout << "Exit button clicked - Palataan aloitusvalikkoon!" << std::endl;
+					resetToMainMenu(); // Reset to main menu
+				}
+				else if (n.getText() == "resize") { // If resize button is clicked
+					std::cout << "Resize button clicked - Vaihdetaan ikkunan tila pelin aikana" << std::endl;
+					toggleFullScreen(); // Toggle fullscreen
+				}
+			}
+		}
+	}*/
+	for(Nappi& n : this->scenes[currentScene].getMenu().getButtons()){
+		if(n.isClicked()){
+			if(n.getText() == "start"){
+				currentScene = 1;
+			}
+			if(n.getText() == "exit" && !isGameRunning){
+				//currentScene = 1;
+				closeGame();
+			}
+			else if(n.getText() == "exit")
+				currentScene = 0;
+			if(n.getText() == "resize"){
+				toggleFullScreen();
+			}
+		}
+		
 	}
 
-
+}
 void Game::addCharacter(Character& character){
-	this->characters.push_back(character);
+	this->scenes[currentScene].getCharacters().push_back(character);
 }
 void Game::addCharacter(float posX, float posY, const char* fileName){
-	this->characters.push_back((Character){posX, posY, fileName, &this->textureManager});
+	this->scenes[currentScene].getCharacters().push_back((Character){posX, posY, fileName, &this->textureManager});
 }
 
 void Game::resetToMainMenu() {
-	isGameRunning = false;
-	menu = Menu();
+	/*isGameRunning = false;
+	Menu& menu = scenes[currentScene].getMenu(); 
 	menu.addButton(Nappi(200, 150, 150, 50, "start", GREEN));
 	menu.addButton(Nappi(200, 250, 150, 50, "exit", RED));
 	menu.addButton(Nappi(200, 350, 150, 50, "resize", BLUE));
 	menu.addText(Text("Hello World", (Vector2){200, 200}, 16, BLACK));
+	*/
+	
+	currentScene = 0;
+}
+
+void Game::makeMenu2(){
+	scenes.push_back(Scene());
+	Menu& menu = scenes[currentScene + 1].getMenu();
+	menu.addButton(Nappi(100, 50, 150, 50, "resize", BLUE));	
+	menu.addButton(Nappi(100, 150, 150, 50, "exit", RED));	
+
+	//isGameRunning = true;
+	//currentScene = 1;
+}
+
+void Game::makeMainMenu(){
+
+	scenes.push_back(Scene());
+	Menu& menu = scenes[currentScene].getMenu();
+	menu.addButton(Nappi(200, 150, 150, 50, "start", GREEN)); 
+	menu.addButton(Nappi(200, 250, 150, 50, "exit", RED)); 
+	menu.addButton(Nappi(200, 350, 150, 50, "resize", BLUE)); 
+
+	menu.addText(Text("Hello World", (Vector2){200, 200}, 16, BLACK));
+	isGameRunning = false;
+	
+	currentScene = 0;
 }
 
 void Game::toggleFullScreen() {
@@ -203,7 +247,7 @@ void Game::updateButtonPositions() {
 
     std::cout << "Päivitetään nappien sijainnit: " << screenWidth << "x" << screenHeight << std::endl;
 
-    for (Nappi& n : this->menu.getButtons()) {
+    for (Nappi& n : this->scenes[currentScene].getMenu().getButtons()) {
         if (n.getText() == "start") {
             n.setPosition(screenWidth / 2 - 75, screenHeight / 2 - 100); // Keskitetään
         } 
