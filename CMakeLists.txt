@@ -40,6 +40,24 @@ add_executable(${PROJECT_NAME} ${all_SRCS})
 #set(raylib_VERBOSE 1)
 target_link_libraries(${PROJECT_NAME} raylib)
 
+file(GLOB_RECURSE ASSETS "${CMAKE_SOURCE_DIR}/assets/*")
+foreach(ASSET ${ASSETS})
+    file(RELATIVE_PATH ASSET_RELATIVE_PATH "${CMAKE_SOURCE_DIR}/" ${ASSET})
+
+    ##build directory
+    set(DESTINATION_PATH "${CMAKE_BINARY_DIR}/${ASSET_RELATIVE_PATH}")
+
+    ##copy to target path
+    add_custom_command(
+        TARGET Samuli-Survivors POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${ASSET} ${CMAKE_BINARY_DIR}/${ASSET_RELATIVE_PATH} ##where to
+        #  assets to correct places
+        ## png = assets/    mp3 = assets/sounds/
+        COMMENT "Copying: ${ASSET_RELATIVE_PATH}"
+    )
+endforeach()
+
+
 # Web Configurations
 
 # Checks if OSX and links appropriate frameworks (Only required on MacOS)
