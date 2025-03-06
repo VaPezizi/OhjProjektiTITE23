@@ -44,6 +44,22 @@ private:
 	SoundManager soundManager;
 	TextureManager textureManager;
 	void resetToMainMenu(); // Reset to main menu
+	void updateTimer();   // Updates the game timer to track elapsed time
+    void updateExperience();  // Updates the player's experience points
+	void resetGameStats();  // Resets all game statistics to their default values
+
+	int experiencePoints;
+    int level;
+    int xpThreshold;
+    float elapsedTime;
+    int displayedTime;
+
+	int healthPoints; // Health points
+	void takeDamage(int amount); // The player loses HP
+	
+	bool isPaused = false; // Is paused
+
+
 
 public: 
 	Game(const int& screenWidth, const int& screenHeight, const int& FPS){
@@ -53,6 +69,8 @@ public:
 		SetTargetFPS(FPS);
 		this->scenes = std::vector<Scene>();
 		this->mousePos = (Vector2){0,0};
+
+		healthPoints = 100; // The player starts with 100 HP
 
 	}
 	void updateButtonPositions();

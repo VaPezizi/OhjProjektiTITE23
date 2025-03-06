@@ -90,7 +90,41 @@ void Game::drawGame(){
 	for(Character& c : characters){
 		//c.drawCharacter(&this->textureManager);
 		c.drawCharacter();
-	}	
+	}
+
+	if (currentScene == 1) {  
+		std::vector<Character>& characters = this->scenes[currentScene].getCharacters();
+		for (Character& c : characters) {
+			c.drawCharacter();
+		}
+		// Draw HP in the top right corner
+	    std::string hpText = "HP: " + std::to_string(healthPoints);
+    	DrawText(hpText.c_str(), screenWidth - 150, 70, 30, RED);
+
+		// Draw XP and level in the top right corner (testing without updating)
+		std::string xpText = "XP: " + std::to_string(experiencePoints) + "/" + std::to_string(xpThreshold);
+		std::string levelText = "Level: " + std::to_string(level);
+
+		DrawText(levelText.c_str(), screenWidth - 150, 10, 20, BLACK);
+		DrawText(xpText.c_str(), screenWidth - 150, 40, 20, BLACK);
+
+		// Calculate minutes and seconds from the displayed time
+		int minutes = displayedTime / 60;
+		int seconds = displayedTime % 60;
+
+		// Format the timer text as "MM:SS"
+		std::string timerText = (minutes < 10 ? "0" : "") + std::to_string(minutes) + ":" +
+								(seconds < 10 ? "0" : "") + std::to_string(seconds);
+
+		int textWidth = MeasureText(timerText.c_str(), 30); // Center the text
+		DrawText(timerText.c_str(), (screenWidth / 2) - (textWidth / 2), 20, 30, BLACK);
+		}
+
+	// Draw "PAUSED" if the game is currently paused
+	if (isPaused) {
+		DrawText("PAUSED", screenWidth / 2 - 50, screenHeight / 2, 40, RED);
+	}
+
 	EndDrawing();
 }
 
@@ -113,6 +147,20 @@ void Game::updateGame(){
 		std::cout << "F11 painettu - Vaihdetaan ikkunan tilaa" << std::endl;
 		toggleFullScreen(); // Toggle fullscreen
 	}
+
+	// The player can also pause the game by pressing "P"
+	if (IsKeyPressed(KEY_P)) {
+		isPaused = !isPaused; // Toggle the pause state on or off
+	}
+
+	if (isGameRunning && !isPaused) {  
+		if (IsKeyPressed(KEY_H)) {
+			takeDamage(10);  // Reduce HP only if the game is not paused
+		}
+	}
+	
+
+	
 /*	
 	if (!isGameRunning) {  
 		for (Nappi& n : this->scenes[currentScene].getMenu().getButtons()) { // Check if any button is clicked during the main menu
@@ -159,6 +207,7 @@ void Game::updateGame(){
 			if(n.getText() == "start"){
 				currentScene = 1;
 				isGameRunning = true;
+				resetGameStats(); // Reset XP, level, and timer
 			}
 			if(n.getText() == "exit" && !isGameRunning){
 				//currentScene = 1;
@@ -167,13 +216,24 @@ void Game::updateGame(){
 			else if(n.getText() == "exit"){
 				isGameRunning = false;
 				currentScene = 0;
+				resetGameStats();
 			}
 			if(n.getText() == "resize"){
 				toggleFullScreen();
 			}
+			// Functionality for the pause button
+			if (n.getText() == "pause") {
+				isPaused = !isPaused; // Toggle the pause state on or off
+			}
 		}
-		
+
+		// Timer and XP update only if the game is running and not paused
+		if (isGameRunning && !isPaused) {
+			updateTimer();       // Call the function to update the timer
+			updateExperience();  // Call the function to update XP
+		}
 	}
+
 
 }
 void Game::addCharacter(Character& character){
@@ -193,11 +253,13 @@ void Game::resetToMainMenu() {
 	*/
 	
 	currentScene = 0;
+	isPaused = false;
 }
 
 void Game::makeMenu2(){
 	scenes.push_back(Scene());
 	Menu& menu = scenes[currentScene + 1].getMenu();
+	menu.addButton(Nappi(100, 250, 150, 50, "pause", ORANGE));
 	menu.addButton(Nappi(100, 50, 150, 50, "resize", BLUE));	
 	menu.addButton(Nappi(100, 150, 150, 50, "exit", RED));	
 
@@ -240,9 +302,8 @@ void Game::toggleFullScreen() {
         ToggleFullscreen();
     }
 
-    updateButtonPositions(); // 🔹 Päivitetään nappien paikat, kun ruudun koko muuttuu!
+	updateButtonPositions(); // Update button positions when the screen size changes
 }
-
 
 void Game::updateButtonPositions() {
     int screenWidth = GetScreenWidth();   // Haetaan nykyinen ruudun leveys
@@ -263,5 +324,50 @@ void Game::updateButtonPositions() {
     }
 }
 
+void Game::updateTimer() {
+	static double lastUpdateTime = 0; // Tracks the timestamp of the last update
+	double currentTime = GetTime(); // Retrieves the current time since the game started
+	
+	// Update the timer every second
+	if (currentTime - lastUpdateTime >= 1.0) {  
+		lastUpdateTime = currentTime; // Update the last update timestamp
+		displayedTime++;  // Increment the displayed time by one second	
+    }
+}
 
+void Game::updateExperience() {
+	static double lastXpIncreaseTime = 0; // Stores the timestamp of the last XP increase
+	double currentTime = GetTime(); // Retrieves the current time
+	
+    // XP increases only once every 0.5 seconds (adjustable if needed)
+    if (IsKeyPressed(KEY_E) && currentTime - lastXpIncreaseTime >= 0.5) {
+        lastXpIncreaseTime = currentTime; // Update the last experience point increase time
+        experiencePoints += 20; // Increase the experience points by 20
+        
+        if (experiencePoints >= xpThreshold) {
+            experiencePoints -= xpThreshold; // Deduct the XP threshold
+            level++; // Increase the level
+            xpThreshold += 50; // Increase the XP threshold
+            std::cout << "Taso nousi! Nykyinen taso: " << level << std::endl; // DEBUG
+        }
+    }
+}
+
+
+void Game::resetGameStats() {
+    experiencePoints = 0; // Reset experience points
+    level = 1; // Reset level
+    xpThreshold = 100; // Reset XP threshold
+    elapsedTime = 0.0f; // Reset elapsed time
+    displayedTime = 0; // Reset displayed time
+	isPaused = false; // Reset pause state
+	healthPoints = 100;  // Reset HP to full when exiting the game
+}
+
+void Game::takeDamage(int amount) {
+    healthPoints -= amount;
+    if (healthPoints < 0) {
+        healthPoints = 0;  // HP cannot go below zero
+    }
+}
 
