@@ -107,7 +107,10 @@ void Game::closeGame(){
 }
 
 void Game::updateGame(){
-	this->scenes[currentScene].getCharacters().front().moveCharacter(-1.0f, 0.0f); // Move the first character
+	// Päivitetään jokaisen hahmon tila
+    for (Character& character : this->scenes[currentScene].getCharacters()) {
+        character.updateCharacter();
+    }
 
 	if (IsKeyPressed(KEY_F11)) { // If F11 is pressed
 		std::cout << "F11 painettu - Vaihdetaan ikkunan tilaa" << std::endl;

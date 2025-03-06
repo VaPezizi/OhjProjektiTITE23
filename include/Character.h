@@ -36,5 +36,8 @@ public:
 
 	//Used to move the character by x and y values. 
 	void moveCharacter(float x, float y);
+
+	//Used to update the character.
+	void updateCharacter();
 };
 #endif
