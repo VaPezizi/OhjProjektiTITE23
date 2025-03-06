@@ -26,7 +26,7 @@ public:
 		this->textures = textures;
 		textures->loadTexture(fileName);
 	}
-	~Character(){
+	virtual ~Character(){
 	}
 	Character & operator=(const Character&){
 		//std::cout << "MORO\n";
@@ -38,6 +38,7 @@ public:
 	void moveCharacter(float x, float y);
 
 	//Used to update the character.
-	void updateCharacter();
+	virtual void updateCharacter();		//Virtual method that derived classes can override. 
+
 };
 #endif

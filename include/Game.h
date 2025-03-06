@@ -12,8 +12,9 @@
 #include "Character.h"
 #include "SoundManager.h"
 #include "TextureManager.h"
-#include "Menu.h"
+//#include "Menu.h"
 #include "Scene.h"
+//#include "Player.h"
 #ifndef _GAME
 #define _GAME
 
@@ -28,11 +29,12 @@ protected:
 	Vector2 mousePos; 
 
 	bool fullScreen = 0; 
-
-/*	
+	
+	/*
 	Menu menu;
 	std::vector<Character> characters;
-*/
+	*/
+
 	std::vector<Scene> scenes;
 	bool isGameRunning = false; 
 
@@ -47,12 +49,14 @@ private:
 
 public: 
 	Game(const int& screenWidth, const int& screenHeight, const int& FPS){
+		//this->pelaaja = Player((float)screenWidth / 2, (float)screenHeight / 2, "assets/testTexture.png", &this->textureManager);
 		currentScene = 0;
 		this->screenWidth = screenWidth;
 		this->screenHeight = screenHeight;
 		SetTargetFPS(FPS);
 		this->scenes = std::vector<Scene>();
 		this->mousePos = (Vector2){0,0};
+
 
 	}
 	void updateButtonPositions();
@@ -64,7 +68,8 @@ public:
 	void makeMainMenu();
 	void drawGame();		//Most draw calls should be made / called from here
 	void updateGame();		//Game updates should be made / called from here
-	void addCharacter(Character& character);
+	//void addCharacter(Character& character);
+	void addPlayer(float posX, float posY, const char* fileName);
 	void addCharacter(float posX, float posY, const char* fileName);
 	void toggleFullScreen(); // Toggle fullscreen
 	

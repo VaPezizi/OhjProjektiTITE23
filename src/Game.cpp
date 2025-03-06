@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "Character.h"
+#include "Player.h"
 #include <iostream>
+#include <memory>
 
 #ifndef _VECTOR
 #define _VECTOR
@@ -36,9 +38,9 @@ void Game::initGame(const char* windowName){
 
 //Game main loop is here
 void Game::startMainLoop(){
-	Character testi = Character((float) screenWidth / 2, (float) screenHeight / 2, "assets/testTexture.png", &this->textureManager);
+	//Player testi = Player((float) screenWidth / 2, (float) screenHeight / 2, "assets/testTexture.png", &this->textureManager);
 	//addCharacter(Character((float) screenWidth / 2, (float) screenHeight / 2, "assets/testTexture.png"));
-	addCharacter(testi);
+	addPlayer(400.0f, 400.0f, "assets/testTexture.png");
 	//addCharacter(Character(screenWidth / 2, screenHeight / 2, "assets/testTexture.png"));
 
 	while(!WindowShouldClose()){	
@@ -56,12 +58,14 @@ void Game::startMainLoop(){
 void Game::drawGame(){
 	
 	Menu& menu = this->scenes[currentScene].getMenu();
-	std::vector<Character>& characters = this->scenes[currentScene].getCharacters();
+	std::vector<std::shared_ptr<Character>>& characters = this->scenes[currentScene].getCharacters();
 	//Starts Draw mode, all draw calls should be made here (if possible)
 	//We can draw in other places if needed, but opening draw mode has to be done there then.
 
 	BeginDrawing();
 	ClearBackground(WHITE);
+
+	
 
 	if (!isGameRunning) {
 		for (Nappi& n : menu.getButtons()) {
@@ -87,9 +91,9 @@ void Game::drawGame(){
 
 	//DrawText("Hello World", this->screenWidth / 2, this->screenHeight / 2, 20, BLACK);
 
-	for(Character& c : characters){
+	for(std::shared_ptr<Character>& c : characters){
 		//c.drawCharacter(&this->textureManager);
-		c.drawCharacter();
+		c->drawCharacter();
 	}	
 	EndDrawing();
 }
@@ -108,9 +112,11 @@ void Game::closeGame(){
 
 void Game::updateGame(){
 	// Päivitetään jokaisen hahmon tila
-    for (Character& character : this->scenes[currentScene].getCharacters()) {
-        character.updateCharacter();
-    }
+	//pelaaja.updateCharacter();	
+	
+	for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
+		character->updateCharacter();
+	}
 
 	if (IsKeyPressed(KEY_F11)) { // If F11 is pressed
 		std::cout << "F11 painettu - Vaihdetaan ikkunan tilaa" << std::endl;
@@ -179,11 +185,25 @@ void Game::updateGame(){
 	}
 
 }
-void Game::addCharacter(Character& character){
+/*void Game::addCharacter(Character& character){
 	this->scenes[currentScene].getCharacters().push_back(character);
+}*/
+
+
+/*
+ * Lisää pelaajan.
+ * Huomiona, että nykyään hahmot ovat pointtereina, jolloin listan olioita voidaan käsitellä
+ * Characterin alaluokkien olioina.
+ * Tämä toiminnallisuus tulee vain pointtereilla
+ */
+void Game::addPlayer(float posX, float posY, const char* fileName){
+	this->scenes[currentScene].getCharacters().push_back(
+		std::shared_ptr<Character>(new Player{posX, posY, fileName, &this->textureManager}));
 }
+
 void Game::addCharacter(float posX, float posY, const char* fileName){
-	this->scenes[currentScene].getCharacters().push_back((Character){posX, posY, fileName, &this->textureManager});
+	this->scenes[currentScene].getCharacters().push_back(
+		std::shared_ptr<Character>(new Character{posX, posY, fileName, &this->textureManager}));
 }
 
 void Game::resetToMainMenu() {
