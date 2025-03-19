@@ -27,6 +27,7 @@ protected:
 	int windowPosY = 100; // Window position Y
 
 	Vector2 mousePos; 
+	Camera2D camera; // Add a Camera2D object
 
 	bool fullScreen = 0; 
 	

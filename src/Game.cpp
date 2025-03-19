@@ -26,6 +26,10 @@
 //At this point, only initializes window and OpenGL context, but this function will expand
 void Game::initGame(const char* windowName){
 	InitWindow(this->screenWidth, this->screenHeight, windowName);
+	camera.target = { 400.0f, 400.0f }; // Initial target (e.g., player position)
+    camera.offset = { (float)this->screenWidth / 2, (float)this->screenHeight / 2 }; // Center of the screen
+    camera.rotation = 0.0f;
+    camera.zoom = 1.0f;
 	soundManager.loadSound("background", "assets/sounds/bg.mp3"); // Load background sound
  	soundManager.playSound("background"); // Play background sound
 	
@@ -64,7 +68,7 @@ void Game::drawGame(){
 
 	BeginDrawing();
 	ClearBackground(WHITE);
-
+	BeginMode2D(camera);
 	
 
 	if (!isGameRunning) {
@@ -117,6 +121,15 @@ void Game::updateGame(){
 	for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
 		character->updateCharacter();
 	}
+
+	for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
+        // Check if the character is a Player
+        std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(character);
+        if (player) {
+            camera.target = { player->getPosition().x, player->getPosition().y }; // Update camera target to player's position
+            break; // Exit the loop once the player is found
+        }
+    }
 
 	if (IsKeyPressed(KEY_F11)) { // If F11 is pressed
 		std::cout << "F11 painettu - Vaihdetaan ikkunan tilaa" << std::endl;
