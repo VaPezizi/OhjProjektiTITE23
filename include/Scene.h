@@ -13,6 +13,7 @@ private:
 	TextureManager * textureManager;
 	Menu menu;
 	std::string taustaKuva;
+	std::shared_ptr<Player>player;
 public:
 	Scene(TextureManager * textureManager);
 	Scene(Menu& menu, std::vector<std::shared_ptr<Character>> & characters, TextureManager * textureManager);
@@ -24,7 +25,7 @@ public:
 	void updateScene();
 	void addPlayer(float posX, float posY, const char* fileName);
 	void addPlayer(std::shared_ptr<Player>& player);
-	
+	void addEnemy(float posX, float posY,float speed, const char* fileName);	
 };
 
 #endif
