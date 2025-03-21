@@ -35,7 +35,8 @@ void Game::initGame(const char* windowName){
  	soundManager.playSound("background"); // Play background sound
 	
 	makeMainMenu();
-	makeMenu2();
+	//makeMenu2();
+	makeGameScene();
 	startMainLoop();
 
 }
@@ -187,6 +188,8 @@ void Game::updateGame(){
 			if(n.getText() == "start"){
 				currentScene = 1;
 				isGameRunning = true;
+				camera.offset = { (float)this->screenWidth / 2, (float)this->screenHeight / 2 }; // Center of the screen
+				camera.target = {400.0f, 400.0f};
 			}
 			if(n.getText() == "exit" && !isGameRunning){
 				//currentScene = 1;
@@ -215,6 +218,7 @@ void Game::updateGame(){
  * Characterin alaluokkien olioina.
  * Tämä toiminnallisuus tulee vain pointtereilla
  */
+/*
 void Game::addPlayer(float posX, float posY, const char* fileName){
 	this->scenes[currentScene].getCharacters().push_back(
 		std::shared_ptr<Character>(new Player{posX, posY, fileName, &this->textureManager}));
@@ -224,21 +228,29 @@ void Game::addCharacter(float posX, float posY, const char* fileName){
 	this->scenes[currentScene].getCharacters().push_back(
 		std::shared_ptr<Character>(new Character{posX, posY, fileName, &this->textureManager}));
 }
-
+*/
 void Game::resetToMainMenu() {
-	/*isGameRunning = false;
-	Menu& menu = scenes[currentScene].getMenu(); 
-	menu.addButton(Nappi(200, 150, 150, 50, "start", GREEN));
-	menu.addButton(Nappi(200, 250, 150, 50, "exit", RED));
-	menu.addButton(Nappi(200, 350, 150, 50, "resize", BLUE));
-	menu.addText(Text("Hello World", (Vector2){200, 200}, 16, BLACK));
-	*/
-	
 	currentScene = 0;
+	camera.offset = {0.0f, 0.0f};
+	camera.target = {0.0f, 0.0f};
+}
+
+//Pelin "pää scene"
+void Game::makeGameScene(){
+
+	scenes.push_back(Scene(&this->textureManager));
+	Scene& scene = scenes.back();
+
+	Menu& menu = scene.getMenu();
+	//menu.addButton(Nappi(100, 50, 150, 50, "resize", BLUE));	
+	menu.addButton(Nappi(100, 150, 150, 50, "exit", RED));	
+
+	scene.addPlayer(400.0f, 400.0f, "assets/testTexture.png");
+	 
 }
 
 void Game::makeMenu2(){
-	scenes.push_back(Scene());
+	scenes.push_back(Scene(&this->textureManager));
 	Menu& menu = scenes[currentScene + 1].getMenu();
 	menu.addButton(Nappi(100, 50, 150, 50, "resize", BLUE));	
 	menu.addButton(Nappi(100, 150, 150, 50, "exit", RED));	
@@ -249,7 +261,7 @@ void Game::makeMenu2(){
 
 void Game::makeMainMenu(){
 
-	scenes.push_back(Scene());
+	scenes.push_back(Scene(&this->textureManager));
 	Menu& menu = scenes[currentScene].getMenu();
 	menu.addButton(Nappi(200, 150, 150, 50, "start", GREEN)); 
 	menu.addButton(Nappi(200, 250, 150, 50, "exit", RED)); 
