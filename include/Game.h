@@ -73,7 +73,7 @@ public:
 	void addPlayer(float posX, float posY, const char* fileName);
 	void addCharacter(float posX, float posY, const char* fileName);
 	void toggleFullScreen(); // Toggle fullscreen
-	
+	void makeGameScene();	
 	void makeMenu2();
 	
 };

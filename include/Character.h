@@ -3,7 +3,7 @@
 #define _RAYLIB
 #endif
 #include <string>
-
+#include <iostream>
 #include "TextureManager.h"
 
 #ifndef _CHARACTER
