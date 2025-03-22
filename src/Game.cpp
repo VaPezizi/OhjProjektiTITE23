@@ -246,7 +246,7 @@ void Game::makeGameScene(){
 	menu.addButton(Nappi(100, 150, 150, 50, "exit", RED));	
 
 	scene.addPlayer(400.0f, 400.0f, "assets/testTexture.png");
-	 
+	scene.addEnemy(450.0f, 450.0f, 0.3f, "assets/poffuTexture.png"); 
 }
 
 void Game::makeMenu2(){

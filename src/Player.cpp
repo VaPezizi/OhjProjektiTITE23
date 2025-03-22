@@ -20,4 +20,7 @@ void Player::updateCharacter(){
 		moveCharacter(speed, 0);
 
 }
+Vector2 Player::getPosition() const{
+	return this->position;
+}
 Player::~Player(){}

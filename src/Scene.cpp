@@ -3,6 +3,7 @@
 #include "TextureManager.h"
 #include <vector>
 #include <memory>
+#include "Enemy.h"
 
 Scene::Scene(TextureManager * textureManager){		//TODO: Lisää tänne taustakuva 
 	this->characters = std::vector<std::shared_ptr<Character>>();
@@ -23,6 +24,7 @@ void Scene::addCharacter(std::shared_ptr<Character>& character){
 }
 void Scene::addPlayer(std::shared_ptr<Player>& character){
 	this->characters.push_back(character);	
+	player = character;
 }
 void Scene::addPlayer(float posX, float posY, const char* fileName){
 	std::shared_ptr<Player> c(new Player(posX,
@@ -33,9 +35,23 @@ void Scene::addPlayer(float posX, float posY, const char* fileName){
 
 	//std::cout << "MORO\n";
 	this->characters.push_back(c);
-
+	player = c;
 }
 
+void Scene::addEnemy(float posX, float posY, float speed, const char* fileName){
+	std::shared_ptr<Enemy> c(new Enemy(
+		posX,
+		posY,
+		speed,
+		fileName,
+		this->textureManager,
+		this->player
+		));
+
+	//std::cout << "MORO\n";
+	this->characters.push_back(c);
+
+}
 void Scene::addCharacter(float posX, float posY, const char* fileName){
 	std::shared_ptr<Character> c(new Character(posX,
 		posY,
