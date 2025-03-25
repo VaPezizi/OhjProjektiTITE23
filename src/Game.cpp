@@ -50,7 +50,25 @@ void Game::startMainLoop(){
 		}
 	}
 
+void Game::drawHealthBar(int x, int y, int width, int height, int currentHP, int maxHP) {
+	float hpPercent = (float)currentHP / maxHP;
+	Color barColor;
 
+	if (hpPercent > 0.7f) barColor = GREEN;
+	else if (hpPercent > 0.4f) barColor = YELLOW;
+	else if (hpPercent > 0.2f) barColor = ORANGE;
+	else barColor = RED;
+
+	// Draw bar background (empty)
+	DrawRectangle(x, y, width, height, WHITE);
+
+	// Draw filled HP portion
+	DrawRectangle(x + 1, y + 1, (int)((width - 2) * hpPercent), height - 2, barColor);
+
+	// Draw border
+	DrawRectangleLines(x, y, width, height, BLACK);
+}
+	
 
 //All drawing should be done in this function
 void Game::drawGame(){
@@ -92,12 +110,20 @@ void Game::drawGame(){
 		c.drawCharacter();
 	}
 
-	if (currentScene == 1) {  
-		std::vector<Character>& characters = this->scenes[currentScene].getCharacters();
+	if (currentScene == 1) {
+		drawHealthBar(screenWidth - 200, 100, 150, 20, playerHealth, playerMaxHealth);
+	
+		std::vector<Character>& characters = scenes[currentScene].getCharacters();
 		for (Character& c : characters) {
 			c.drawCharacter();
 		}
-		// Draw HP in the top right corner
+	
+		for (Text& t : menu.getTexts()) {
+			t.draw();
+		}
+	}
+	
+		/*/ Draw HP in the top right corner
 	    std::string hpText = "HP: " + std::to_string(healthPoints);
     	DrawText(hpText.c_str(), screenWidth - 150, 70, 30, RED);
 
@@ -117,8 +143,8 @@ void Game::drawGame(){
 								(seconds < 10 ? "0" : "") + std::to_string(seconds);
 
 		int textWidth = MeasureText(timerText.c_str(), 30); // Center the text
-		DrawText(timerText.c_str(), (screenWidth / 2) - (textWidth / 2), 20, 30, BLACK);
-		}
+		DrawText(timerText.c_str(), (screenWidth / 2) - (textWidth / 2), 20, 30, BLACK);*/
+		
 
 	// Draw "PAUSED" if the game is currently paused
 	if (isPaused) {
@@ -144,7 +170,6 @@ void Game::updateGame(){
 	this->scenes[currentScene].getCharacters().front().moveCharacter(-1.0f, 0.0f); // Move the first character
 
 	if (IsKeyPressed(KEY_F11)) { // If F11 is pressed
-		std::cout << "F11 painettu - Vaihdetaan ikkunan tilaa" << std::endl;
 		toggleFullScreen(); // Toggle fullscreen
 	}
 
@@ -155,7 +180,7 @@ void Game::updateGame(){
 
 	if (isGameRunning && !isPaused) {  
 		if (IsKeyPressed(KEY_H)) {
-			takeDamage(10);  // Reduce HP only if the game is not paused
+			takeDamage(5);
 		}
 	}
 	
@@ -227,14 +252,28 @@ void Game::updateGame(){
 			}
 		}
 
-		// Timer and XP update only if the game is running and not paused
 		if (isGameRunning && !isPaused) {
-			updateTimer();       // Call the function to update the timer
-			updateExperience();  // Call the function to update XP
+			updateTimer(); // Päivitä ajastin normaalisti
+			scenes[currentScene].getCharacters().front().updateExperience(); // Pelaajan XP-päivitys
 		}
+		
+		
+		if (isGameRunning) {
+			Menu& menu = scenes[currentScene].getMenu();
+			std::vector<Text>& texts = menu.getTexts();
+			Character& player = scenes[currentScene].getCharacters().front();
+		
+			if (texts.size() >= 3) {
+				std::string levelStr = "Level: " + std::to_string(player.getLevel());
+				std::string xpStr = "XP: " + std::to_string(player.getExperiencePoints()) + "/" + std::to_string(player.getXpThreshold());
+				std::string hpStr = "HP: " + std::to_string(playerHealth) + "/" + std::to_string(playerMaxHealth);
+				texts[0].setText(levelStr);
+				texts[1].setText(xpStr);
+				texts[2].setText(hpStr);
+			}
+		}
+				
 	}
-
-
 }
 void Game::addCharacter(Character& character){
 	this->scenes[currentScene].getCharacters().push_back(character);
@@ -265,7 +304,11 @@ void Game::makeMenu2(){
 
 	//isGameRunning = true;
 	//currentScene = 1;
-}
+
+	menu.addText(Text("Level: 1", (Vector2){screenWidth - 150, 10}, 20, BLACK));
+	menu.addText(Text("XP: 0/100", (Vector2){screenWidth - 150, 40}, 20, BLACK));
+	menu.addText(Text("HP: 100", (Vector2){screenWidth - 150, 70}, 30, RED));
+	} 
 
 void Game::makeMainMenu(){
 
@@ -335,39 +378,24 @@ void Game::updateTimer() {
     }
 }
 
-void Game::updateExperience() {
-	static double lastXpIncreaseTime = 0; // Stores the timestamp of the last XP increase
-	double currentTime = GetTime(); // Retrieves the current time
-	
-    // XP increases only once every 0.5 seconds (adjustable if needed)
-    if (IsKeyPressed(KEY_E) && currentTime - lastXpIncreaseTime >= 0.5) {
-        lastXpIncreaseTime = currentTime; // Update the last experience point increase time
-        experiencePoints += 20; // Increase the experience points by 20
-        
-        if (experiencePoints >= xpThreshold) {
-            experiencePoints -= xpThreshold; // Deduct the XP threshold
-            level++; // Increase the level
-            xpThreshold += 50; // Increase the XP threshold
-            std::cout << "Taso nousi! Nykyinen taso: " << level << std::endl; // DEBUG
-        }
-    }
-}
-
-
 void Game::resetGameStats() {
-    experiencePoints = 0; // Reset experience points
-    level = 1; // Reset level
-    xpThreshold = 100; // Reset XP threshold
+	this->scenes[1].getCharacters().front().resetStats();
     elapsedTime = 0.0f; // Reset elapsed time
     displayedTime = 0; // Reset displayed time
 	isPaused = false; // Reset pause state
-	healthPoints = 100;  // Reset HP to full when exiting the game
+	this->resetHealth();
 }
 
 void Game::takeDamage(int amount) {
-    healthPoints -= amount;
-    if (healthPoints < 0) {
-        healthPoints = 0;  // HP cannot go below zero
-    }
+    playerHealth -= amount;
+    if (playerHealth < 0) playerHealth = 0;
 }
+
+void Game::resetHealth() {
+    playerHealth = playerMaxHealth;
+}
+
+
+
+
 

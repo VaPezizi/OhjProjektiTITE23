@@ -28,6 +28,10 @@ protected:
 	Vector2 mousePos; 
 
 	bool fullScreen = 0; 
+	
+	int playerHealth = 100;
+	int playerMaxHealth = 100;
+
 
 /*	
 	Menu menu;
@@ -48,17 +52,10 @@ private:
     void updateExperience();  // Updates the player's experience points
 	void resetGameStats();  // Resets all game statistics to their default values
 
-	int experiencePoints;
-    int level;
-    int xpThreshold;
     float elapsedTime;
     int displayedTime;
-
-	int healthPoints; // Health points
-	void takeDamage(int amount); // The player loses HP
 	
 	bool isPaused = false; // Is paused
-
 
 
 public: 
@@ -69,8 +66,6 @@ public:
 		SetTargetFPS(FPS);
 		this->scenes = std::vector<Scene>();
 		this->mousePos = (Vector2){0,0};
-
-		healthPoints = 100; // The player starts with 100 HP
 
 	}
 	void updateButtonPositions();
@@ -85,8 +80,12 @@ public:
 	void addCharacter(Character& character);
 	void addCharacter(float posX, float posY, const char* fileName);
 	void toggleFullScreen(); // Toggle fullscreen
+
+	void drawHealthBar(int x, int y, int width, int height, int currentHP, int maxHP);
+	void takeDamage(int amount);
 	
 	void makeMenu2();
-	
+    void resetHealth();
+
 };
 #endif

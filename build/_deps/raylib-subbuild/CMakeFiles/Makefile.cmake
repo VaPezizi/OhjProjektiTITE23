@@ -10,8 +10,10 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/4.0.0-rc4/CMakeSystem.cmake"
   "CMakeLists.txt"
   "raylib-populate-prefix/tmp/raylib-populate-mkdirs.cmake"
+  "C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeDetermineSystem.cmake"
   "C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeGenericSystem.cmake"
   "C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeInitializeConfigs.cmake"
+  "C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeSystem.cmake.in"
   "C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeSystemSpecificInformation.cmake"
   "C:/Program Files/CMake/share/cmake-4.0/Modules/CMakeSystemSpecificInitialize.cmake"
   "C:/Program Files/CMake/share/cmake-4.0/Modules/ExternalProject.cmake"
@@ -36,6 +38,7 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
+  "CMakeFiles/4.0.0-rc4/CMakeSystem.cmake"
   "raylib-populate-prefix/tmp/raylib-populate-mkdirs.cmake"
   "raylib-populate-prefix/src/raylib-populate-stamp/download-raylib-populate.cmake"
   "raylib-populate-prefix/src/raylib-populate-stamp/verify-raylib-populate.cmake"
