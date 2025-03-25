@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "Character.h"
+#include "Player.h"
 #include <iostream>
+#include <memory>
 
 #ifndef _VECTOR
 #define _VECTOR
@@ -24,11 +26,17 @@
 //At this point, only initializes window and OpenGL context, but this function will expand
 void Game::initGame(const char* windowName){
 	InitWindow(this->screenWidth, this->screenHeight, windowName);
+	camera.target = { 0.0f, 0.0f }; // Initial target (e.g., player position)
+	//camera.offset = { (float)this->screenWidth / 2, (float)this->screenHeight / 2 }; // Center of the screen
+	camera.offset = {0.0f, 0.0f};
+	camera.rotation = 0.0f;
+	camera.zoom = 1.0f;
 	soundManager.loadSound("background", "assets/sounds/bg.mp3"); // Load background sound
  	soundManager.playSound("background"); // Play background sound
 	
 	makeMainMenu();
-	makeMenu2();
+	//makeMenu2();
+	makeGameScene();
 	startMainLoop();
 
 }
@@ -36,9 +44,9 @@ void Game::initGame(const char* windowName){
 
 //Game main loop is here
 void Game::startMainLoop(){
-	Character testi = Character((float) screenWidth / 2, (float) screenHeight / 2, "assets/testTexture.png", &this->textureManager);
+	//Player testi = Player((float) screenWidth / 2, (float) screenHeight / 2, "assets/testTexture.png", &this->textureManager);
 	//addCharacter(Character((float) screenWidth / 2, (float) screenHeight / 2, "assets/testTexture.png"));
-	addCharacter(testi);
+	//addPlayer(400.0f, 400.0f, "assets/testTexture.png");
 	//addCharacter(Character(screenWidth / 2, screenHeight / 2, "assets/testTexture.png"));
 
 	while(!WindowShouldClose()){	
@@ -74,12 +82,14 @@ void Game::drawHealthBar(int x, int y, int width, int height, int currentHP, int
 void Game::drawGame(){
 	
 	Menu& menu = this->scenes[currentScene].getMenu();
-	std::vector<Character>& characters = this->scenes[currentScene].getCharacters();
+	std::vector<std::shared_ptr<Character>>& characters = this->scenes[currentScene].getCharacters();
 	//Starts Draw mode, all draw calls should be made here (if possible)
 	//We can draw in other places if needed, but opening draw mode has to be done there then.
 
 	BeginDrawing();
 	ClearBackground(WHITE);
+	BeginMode2D(camera);
+	
 
 	if (!isGameRunning) {
 		for (Nappi& n : menu.getButtons()) {
@@ -105,52 +115,62 @@ void Game::drawGame(){
 
 	//DrawText("Hello World", this->screenWidth / 2, this->screenHeight / 2, 20, BLACK);
 
-	for(Character& c : characters){
+	for(std::shared_ptr<Character>& c : characters){
 		//c.drawCharacter(&this->textureManager);
-		c.drawCharacter();
+		c->drawCharacter();
 	}
 
 	if (currentScene == 1) {
-		drawHealthBar(screenWidth - 200, 100, 150, 20, playerHealth, playerMaxHealth);
-	
-		std::vector<Character>& characters = scenes[currentScene].getCharacters();
-		for (Character& c : characters) {
-			c.drawCharacter();
+		// Hahmojen piirtäminen
+		std::vector<std::shared_ptr<Character>>& characters = scenes[currentScene].getCharacters();
+		for (std::shared_ptr<Character>& c : characters) {
+			c->drawCharacter();
 		}
-	
+
+		// Määritetään palkkien sijainti oikeassa yläkulmassa
+		float hudX = camera.target.x + (screenWidth / 2) - 170; // 150 px palkki + marginaali
+		float hudY = camera.target.y - (screenHeight / 2) + 20;
+		
+		
+		drawHealthBar(hudX, hudY, 150, 20, playerHealth, playerMaxHealth);
+
+		Character& player = *scenes[currentScene].getCharacters().front();
+
+		std::string levelStr = "Level: " + std::to_string(player.getLevel());
+		DrawText(levelStr.c_str(), hudX, hudY + 25, 20, BLACK);
+
+		std::string xpStr = "XP: " + std::to_string(player.getExperiencePoints()) + "/" + std::to_string(player.getXpThreshold());
+		DrawText(xpStr.c_str(), hudX, hudY + 50, 20, BLACK);  // Näytetään XP palkin alapuolella
+		
+		int minutes = displayedTime / 60;
+		int seconds = displayedTime % 60;
+
+		std::string timerText = (minutes < 10 ? "0" : "") + std::to_string(minutes) + ":" +
+		(seconds < 10 ? "0" : "") + std::to_string(seconds);
+
+		int textWidth = MeasureText(timerText.c_str(), 20);
+
+		float timerX = camera.target.x - (screenWidth / 2) + (screenWidth / 2) - (textWidth / 2);
+		float timerY = camera.target.y - (screenHeight / 2) + 20;  
+		
+
+		DrawText(timerText.c_str(), timerX, timerY, 30, BLACK);
+		
+
+		// Piirretään muut tekstit
 		for (Text& t : menu.getTexts()) {
 			t.draw();
 		}
 	}
-	
-		/*/ Draw HP in the top right corner
-	    std::string hpText = "HP: " + std::to_string(healthPoints);
-    	DrawText(hpText.c_str(), screenWidth - 150, 70, 30, RED);
-
-		// Draw XP and level in the top right corner (testing without updating)
-		std::string xpText = "XP: " + std::to_string(experiencePoints) + "/" + std::to_string(xpThreshold);
-		std::string levelText = "Level: " + std::to_string(level);
-
-		DrawText(levelText.c_str(), screenWidth - 150, 10, 20, BLACK);
-		DrawText(xpText.c_str(), screenWidth - 150, 40, 20, BLACK);
-
-		// Calculate minutes and seconds from the displayed time
-		int minutes = displayedTime / 60;
-		int seconds = displayedTime % 60;
-
-		// Format the timer text as "MM:SS"
-		std::string timerText = (minutes < 10 ? "0" : "") + std::to_string(minutes) + ":" +
-								(seconds < 10 ? "0" : "") + std::to_string(seconds);
-
-		int textWidth = MeasureText(timerText.c_str(), 30); // Center the text
-		DrawText(timerText.c_str(), (screenWidth / 2) - (textWidth / 2), 20, 30, BLACK);*/
-		
 
 	// Draw "PAUSED" if the game is currently paused
 	if (isPaused) {
 		DrawText("PAUSED", screenWidth / 2 - 50, screenHeight / 2, 40, RED);
 	}
-
+	for (std::shared_ptr<Character>& c : scenes[currentScene].getCharacters()) {
+		c->drawCharacter();
+	}
+	
 	EndDrawing();
 }
 
@@ -167,7 +187,26 @@ void Game::closeGame(){
 }
 
 void Game::updateGame(){
-	this->scenes[currentScene].getCharacters().front().moveCharacter(-1.0f, 0.0f); // Move the first character
+	// Päivitetään jokaisen hahmon tila
+	//pelaaja.updateCharacter();	
+	
+	for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
+		character->updateCharacter();
+		
+		
+		std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(character);
+
+		if(player != nullptr)
+			camera.target = { player->getPosition().x, player->getPosition().y }; // Update camera target to player's position
+	}
+
+	/*for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
+        // Check if the character is a Player
+        std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(character);
+        if (player) {
+            break; // Exit the loop once the player is found
+        }*/
+    
 
 	if (IsKeyPressed(KEY_F11)) { // If F11 is pressed
 		toggleFullScreen(); // Toggle fullscreen
@@ -233,6 +272,8 @@ void Game::updateGame(){
 				currentScene = 1;
 				isGameRunning = true;
 				resetGameStats(); // Reset XP, level, and timer
+				camera.offset = { (float)this->screenWidth / 2, (float)this->screenHeight / 2 }; // Center of the screen
+				camera.target = {400.0f, 400.0f};
 			}
 			if(n.getText() == "exit" && !isGameRunning){
 				//currentScene = 1;
@@ -254,49 +295,64 @@ void Game::updateGame(){
 
 		if (isGameRunning && !isPaused) {
 			updateTimer(); // Päivitä ajastin normaalisti
-			scenes[currentScene].getCharacters().front().updateExperience(); // Pelaajan XP-päivitys
+			scenes[currentScene].getCharacters().front()->updateExperience(); 
 		}
 		
 		
 		if (isGameRunning) {
-			Menu& menu = scenes[currentScene].getMenu();
-			std::vector<Text>& texts = menu.getTexts();
-			Character& player = scenes[currentScene].getCharacters().front();
-		
-			if (texts.size() >= 3) {
-				std::string levelStr = "Level: " + std::to_string(player.getLevel());
-				std::string xpStr = "XP: " + std::to_string(player.getExperiencePoints()) + "/" + std::to_string(player.getXpThreshold());
-				std::string hpStr = "HP: " + std::to_string(playerHealth) + "/" + std::to_string(playerMaxHealth);
-				texts[0].setText(levelStr);
-				texts[1].setText(xpStr);
-				texts[2].setText(hpStr);
-			}
+			std::shared_ptr<Character> player = scenes[currentScene].getCharacters().front(); 
 		}
-				
+			
 	}
 }
-void Game::addCharacter(Character& character){
+/*void Game::addCharacter(Character& character){
 	this->scenes[currentScene].getCharacters().push_back(character);
-}
-void Game::addCharacter(float posX, float posY, const char* fileName){
-	this->scenes[currentScene].getCharacters().push_back((Character){posX, posY, fileName, &this->textureManager});
+}*/
+
+
+/*
+ * Lisää pelaajan.
+ * Huomiona, että nykyään hahmot ovat pointtereina, jolloin listan olioita voidaan käsitellä
+ * Characterin alaluokkien olioina.
+ * Tämä toiminnallisuus tulee vain pointtereilla
+ */
+/*
+void Game::addPlayer(float posX, float posY, const char* fileName){
+	this->scenes[currentScene].getCharacters().push_back(
+		std::shared_ptr<Character>(new Player{posX, posY, fileName, &this->textureManager}));
 }
 
+void Game::addCharacter(float posX, float posY, const char* fileName){
+	this->scenes[currentScene].getCharacters().push_back(
+		std::shared_ptr<Character>(new Character{posX, posY, fileName, &this->textureManager}));
+}
+*/
 void Game::resetToMainMenu() {
-	/*isGameRunning = false;
-	Menu& menu = scenes[currentScene].getMenu(); 
-	menu.addButton(Nappi(200, 150, 150, 50, "start", GREEN));
-	menu.addButton(Nappi(200, 250, 150, 50, "exit", RED));
-	menu.addButton(Nappi(200, 350, 150, 50, "resize", BLUE));
-	menu.addText(Text("Hello World", (Vector2){200, 200}, 16, BLACK));
-	*/
-	
 	currentScene = 0;
+
 	isPaused = false;
+
+	camera.offset = {0.0f, 0.0f};
+	camera.target = {0.0f, 0.0f};
+}
+
+//Pelin "pää scene"
+void Game::makeGameScene(){
+
+	scenes.push_back(Scene(&this->textureManager));
+	Scene& scene = scenes.back();
+
+	Menu& menu = scene.getMenu();
+	//menu.addButton(Nappi(100, 50, 150, 50, "resize", BLUE));	
+	menu.addButton(Nappi(100, 150, 150, 50, "exit", RED));	
+
+	scene.addPlayer(400.0f, 400.0f, "assets/testTexture.png");
+	scene.addEnemy(450.0f, 450.0f, 0.3f, "assets/poffuTexture.png"); 
+
 }
 
 void Game::makeMenu2(){
-	scenes.push_back(Scene());
+	scenes.push_back(Scene(&this->textureManager));
 	Menu& menu = scenes[currentScene + 1].getMenu();
 	menu.addButton(Nappi(100, 250, 150, 50, "pause", ORANGE));
 	menu.addButton(Nappi(100, 50, 150, 50, "resize", BLUE));	
@@ -305,14 +361,11 @@ void Game::makeMenu2(){
 	//isGameRunning = true;
 	//currentScene = 1;
 
-	menu.addText(Text("Level: 1", (Vector2){screenWidth - 150, 10}, 20, BLACK));
-	menu.addText(Text("XP: 0/100", (Vector2){screenWidth - 150, 40}, 20, BLACK));
-	menu.addText(Text("HP: 100", (Vector2){screenWidth - 150, 70}, 30, RED));
 	} 
 
 void Game::makeMainMenu(){
 
-	scenes.push_back(Scene());
+	scenes.push_back(Scene(&this->textureManager));
 	Menu& menu = scenes[currentScene].getMenu();
 	menu.addButton(Nappi(200, 150, 150, 50, "start", GREEN)); 
 	menu.addButton(Nappi(200, 250, 150, 50, "exit", RED)); 
@@ -379,7 +432,7 @@ void Game::updateTimer() {
 }
 
 void Game::resetGameStats() {
-	this->scenes[1].getCharacters().front().resetStats();
+	scenes[currentScene].getCharacters().front()->resetStats(); 
     elapsedTime = 0.0f; // Reset elapsed time
     displayedTime = 0; // Reset displayed time
 	isPaused = false; // Reset pause state

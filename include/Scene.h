@@ -4,23 +4,28 @@
 #include <vector>
 #include "Menu.h"
 #include "Character.h"
+#include "Player.h"
+#include <memory>
 
 class Scene{		//TODO: Lisää tänne taustakuva hommat
 private:
-	std::vector<Character> characters;
+	std::vector<std::shared_ptr<Character>> characters;
 	TextureManager * textureManager;
 	Menu menu;
 	std::string taustaKuva;
+	std::shared_ptr<Player>player;
 public:
-	Scene();
-	Scene(Menu& menu, std::vector<Character>&characters);
-
-	std::vector<Character>& getCharacters();
+	Scene(TextureManager * textureManager);
+	Scene(Menu& menu, std::vector<std::shared_ptr<Character>> & characters, TextureManager * textureManager);
+	std::vector<std::shared_ptr<Character>> & getCharacters();
 	Menu& getMenu();
-	void addCharacter(Character& character);
+	void addCharacter(std::shared_ptr<Character>& character);
 	void addCharacter(float posX, float posY, const char* fileName);
 	void drawScene();
 	void updateScene();
+	void addPlayer(float posX, float posY, const char* fileName);
+	void addPlayer(std::shared_ptr<Player>& player);
+	void addEnemy(float posX, float posY,float speed, const char* fileName);	
 };
 
 #endif

@@ -3,7 +3,7 @@
 #define _RAYLIB
 #endif
 #include <string>
-
+#include <iostream>
 #include "TextureManager.h"
 
 #ifndef _CHARACTER
@@ -32,9 +32,8 @@ public:
 		this->texture = fileName;
 		this->textures = textures;
 		textures->loadTexture(fileName);
-	}	
-
-	~Character(){
+	}
+	virtual ~Character(){
 	}
 	Character & operator=(const Character&){
 		//std::cout << "MORO\n";
@@ -45,10 +44,15 @@ public:
 	//Used to move the character by x and y values. 
 	void moveCharacter(float x, float y);
 
+
 	void updateExperience();
     int getExperiencePoints() const { return experiencePoints; }
     int getLevel() const { return level; }
     int getXpThreshold() const { return xpThreshold; }
     void resetStats(); 
+
+	//Used to update the character.
+	virtual void updateCharacter();		//Virtual method that derived classes can override. 
+	
 };
 #endif

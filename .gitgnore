@@ -1,0 +1,7 @@
+# Estetään buildin ja exe:n pääsy GitHubiin jatkossa
+build/
+*.exe
+*.obj
+*.cmake
+*.log
+*.json
