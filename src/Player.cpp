@@ -21,10 +21,10 @@ void Player::updateCharacter(){
 		moveCharacter(speed, 0);
 
 }
-Vector2 Player::getPosition() const{
+Vector2 Player::getPosition(){
 	return this->position;
 }
-/*void Player::addWeapon(const Weapon& weapon){
+void Player::addWeapon(const Weapon& weapon){
 	this->weapons.push_back(weapon);
 }
 const std::vector<Weapon>& Player::getWeapons(){
@@ -32,5 +32,5 @@ const std::vector<Weapon>& Player::getWeapons(){
 }
 const int& Player::getInventorySpace(){
 	return this->inventorySpace;
-}*/
+}
 Player::~Player(){}
