@@ -28,7 +28,7 @@ protected:
 	float difficultyScale = 5;	
 
 	Vector2 mousePos; 
-	Camera2D camera; // Add a Camera2D object
+	//Camera2D camera; // Add a Camera2D object
 
 	bool fullScreen = 0; 
 	float spawnTime = 0;	

@@ -26,11 +26,11 @@ void Game::initGame(const char* windowName){
 
 	srand(time(NULL));	//Sets the seed for random number generation
 
-	camera.target = { 0.0f, 0.0f }; // Initial target (e.g., player position)
+	//camera.target = { 0.0f, 0.0f }; // Initial target (e.g., player position)
 	//camera.offset = { (float)this->screenWidth / 2, (float)this->screenHeight / 2 }; // Center of the screen
-	camera.offset = {0.0f, 0.0f};
-	camera.rotation = 0.0f;
-	camera.zoom = 1.0f;
+	//camera.offset = {0.0f, 0.0f};
+	//camera.rotation = 0.0f;
+	//camera.zoom = 1.0f;
 	soundManager.loadSound("background", "assets/sounds/bg.mp3"); // Load background sound
  	soundManager.playSound("background"); // Play background sound
 	
@@ -61,29 +61,13 @@ void Game::startMainLoop(){
 
 
 //All drawing should be done in this function
-void Game::drawGame(){
-	
-	/*Menu& menu = this->scenes[currentScene].getMenu();
-	std::vector<std::shared_ptr<Character>>& characters = this->scenes[currentScene].getCharacters();*/
+void Game::drawGame() {
+    BeginDrawing();
+    ClearBackground(WHITE);
 
+    scenes[currentScene].draw(); // The camera is now managed by the Scene class
 
-	//Starts Draw mode, all draw calls should be made here (if possible)
-	//We can draw in other places if needed, but opening draw mode has to be done there then.
-
-
-	BeginDrawing();
-	ClearBackground(WHITE);
-	BeginMode2D(camera);
-	
-
-	//menu.draw();
-	scenes[currentScene].draw();
-
-	/*for(std::shared_ptr<Character>& c : characters){
-		//c.drawCharacter(&this->textureManager);
-		c->drawCharacter();
-	}*/	
-	EndDrawing();
+    EndDrawing();
 }
 
 //Put everything you want to do before the game closes here
@@ -98,40 +82,16 @@ void Game::closeGame(){
 	exit(0);
 }
 
-void Game::updateGame(){
-	// Päivitetään jokaisen hahmon tila
-	//pelaaja.updateCharacter();	
-	
-	for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
-		character->updateCharacter();
-		
-		
-		std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(character);
+void Game::updateGame() {
+    scenes[currentScene].updateCamera(); // Update the camera in the current scene
 
-		if(player != nullptr)
-			camera.target = { player->getPosition().x, player->getPosition().y }; // Update camera target to player's position
-	}
+    for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
+        character->updateCharacter();
+    }
 
-	/*for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
-        // Check if the character is a Player
-        std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(character);
-        if (player) {
-            break; // Exit the loop once the player is found
-        }*/
-    
-
-	if (IsKeyPressed(KEY_F11)) { // If F11 is pressed
-		std::cout << "F11 painettu - Vaihdetaan ikkunan tilaa" << std::endl;
-		toggleFullScreen(); // Toggle fullscreen
-	}
-/*	
-	 "Resize button clicked - Vaihdetaan ikkunan tila pelin aikana" << std::endl;
-					toggleFullScreen(); // Toggle fullscreen
-				}
-			}
-		}
-	}*/
-
+    if (IsKeyPressed(KEY_F11)) {
+        toggleFullScreen();
+    }
 
 	//Temporary solution for enemy spawning		TODO: Make this good code :D
 	if(currentScene == 1){
@@ -163,8 +123,6 @@ void Game::updateGame(){
 			if(n.getText() == "start"){
 				currentScene = 1;
 				isGameRunning = true;
-				camera.offset = { (float)this->screenWidth / 2, (float)this->screenHeight / 2 }; // Center of the screen
-				camera.target = {400.0f, 400.0f};
 			}
 			if(n.getText() == "exit" && !isGameRunning){
 				//currentScene = 1;
@@ -206,8 +164,9 @@ void Game::addCharacter(float posX, float posY, const char* fileName){
 */
 void Game::resetToMainMenu() {
 	currentScene = 0;
-	camera.offset = {0.0f, 0.0f};
-	camera.target = {0.0f, 0.0f};
+	//camera.offset = {0.0f, 0.0f}; TODO: Tämä ei toimi, koska camera on nyt Scene-luokassa
+	//camera.target = {0.0f, 0.0f}; TODO: xdd
+
 }
 
 //Pelin "pää scene"
@@ -222,6 +181,7 @@ void Game::makeGameScene(){
 
 	scene.addPlayer(400.0f, 400.0f, "assets/testTexture.png");
 	scene.addEnemy(450.0f, 450.0f, 0.3f, "assets/poffuTexture.png"); 
+	scene.setBackground("assets/grassTexture.png");
 }
 
 void Game::makeMenu2(){
