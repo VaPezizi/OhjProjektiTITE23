@@ -18,11 +18,6 @@
 #include "Text.h"
 #include "Nappi.h"
 
-// Create buttons		//TODO: Tehdään joku menu luokka tai joku semmonen johna tehdään napit.
-//Nappi startButton(200, 150, 150, 50, "start", GREEN);
-//Nappi exitButton(200, 250, 150, 50, "exit", RED);
-//Nappi resizeButton(200, 350, 150, 50, "resize", BLUE);
-
 //At this point, only initializes window and OpenGL context, but this function will expand
 void Game::initGame(const char* windowName){
 	InitWindow(this->screenWidth, this->screenHeight, windowName);
@@ -55,52 +50,34 @@ void Game::startMainLoop(){
 		
 		//Drawing the game	
 		this->drawGame();
-		}
 	}
+}
 
 
 
 //All drawing should be done in this function
 void Game::drawGame(){
 	
-	Menu& menu = this->scenes[currentScene].getMenu();
-	std::vector<std::shared_ptr<Character>>& characters = this->scenes[currentScene].getCharacters();
+	/*Menu& menu = this->scenes[currentScene].getMenu();
+	std::vector<std::shared_ptr<Character>>& characters = this->scenes[currentScene].getCharacters();*/
+
+
 	//Starts Draw mode, all draw calls should be made here (if possible)
 	//We can draw in other places if needed, but opening draw mode has to be done there then.
+
 
 	BeginDrawing();
 	ClearBackground(WHITE);
 	BeginMode2D(camera);
 	
 
-	if (!isGameRunning) {
-		for (Nappi& n : menu.getButtons()) {
-			n.draw();
-		}
-		for (Text& t : menu.getTexts()) {
-			t.draw();
-		}
-	} 
-	// Draw buttons
-	/*
-	startButton.draw();
-	exitButton.draw();
-	resizeButton.draw();
-	*/
+	//menu.draw();
+	scenes[currentScene].draw();
 
-	for(Nappi& n : menu.getButtons()){
-		n.draw();	
-	}
-	for(Text& t : menu.getTexts()){
-		t.draw();
-	}
-
-	//DrawText("Hello World", this->screenWidth / 2, this->screenHeight / 2, 20, BLACK);
-
-	for(std::shared_ptr<Character>& c : characters){
+	/*for(std::shared_ptr<Character>& c : characters){
 		//c.drawCharacter(&this->textureManager);
 		c->drawCharacter();
-	}	
+	}*/	
 	EndDrawing();
 }
 
@@ -183,6 +160,9 @@ void Game::updateGame(){
 			}
 		}
 	}*/
+
+	//TODO: Ehkä tän vois laittaa omaan funktioon, tai jopa menu luokkaan samalla lailla, kun piirto
+
 	for(Nappi& n : this->scenes[currentScene].getMenu().getButtons()){
 		if(n.isClicked()){
 			if(n.getText() == "start"){

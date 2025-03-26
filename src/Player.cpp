@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <vector>
 
 void Player::updateCharacter(){
 	
@@ -23,4 +24,13 @@ void Player::updateCharacter(){
 Vector2 Player::getPosition() const{
 	return this->position;
 }
+/*void Player::addWeapon(const Weapon& weapon){
+	this->weapons.push_back(weapon);
+}
+const std::vector<Weapon>& Player::getWeapons(){
+	return this->weapons;
+}
+const int& Player::getInventorySpace(){
+	return this->inventorySpace;
+}*/
 Player::~Player(){}
