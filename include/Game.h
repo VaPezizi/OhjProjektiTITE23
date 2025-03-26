@@ -25,12 +25,13 @@ protected:
 
 	int windowPosX = 100; // Window position X
 	int windowPosY = 100; // Window position Y
+	float difficultyScale = 5;	
 
 	Vector2 mousePos; 
 	Camera2D camera; // Add a Camera2D object
 
 	bool fullScreen = 0; 
-	
+	float spawnTime = 0;	
 	/*
 	Menu menu;
 	std::vector<Character> characters;
