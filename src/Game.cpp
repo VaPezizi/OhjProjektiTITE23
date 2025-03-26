@@ -92,6 +92,10 @@ void Game::updateGame() {
     if (IsKeyPressed(KEY_F11)) {
         toggleFullScreen();
     }
+	if (currentScene == 0 && IsKeyPressed(KEY_ENTER)) { // entterillä pelaan
+        currentScene = 1; 
+        isGameRunning = true;
+    }
 
 	//Temporary solution for enemy spawning		TODO: Make this good code :D
 	if(currentScene == 1){
