@@ -3,6 +3,8 @@
 #include "Player.h"
 #include <iostream>
 #include <memory>
+#include <ctime>
+#include <cstdlib>
 
 #ifndef _VECTOR
 #define _VECTOR
@@ -21,6 +23,9 @@
 //At this point, only initializes window and OpenGL context, but this function will expand
 void Game::initGame(const char* windowName){
 	InitWindow(this->screenWidth, this->screenHeight, windowName);
+
+	srand(time(NULL));	//Sets the seed for random number generation
+
 	camera.target = { 0.0f, 0.0f }; // Initial target (e.g., player position)
 	//camera.offset = { (float)this->screenWidth / 2, (float)this->screenHeight / 2 }; // Center of the screen
 	camera.offset = {0.0f, 0.0f};
@@ -120,46 +125,36 @@ void Game::updateGame(){
 		toggleFullScreen(); // Toggle fullscreen
 	}
 /*	
-	if (!isGameRunning) {  
-		for (Nappi& n : this->scenes[currentScene].getMenu().getButtons()) { // Check if any button is clicked during the main menu
-			if (n.isClicked()) { // If button is clicked
-				std::cout << "Nappi painettu: " << n.getText() << std::endl; // 🔍 DEBUG
-
-				if (n.getText() == "start") { // If start button is clicked
-					std::cout << "Start button clicked - Peli alkaa!" << std::endl; //  DEBUG
-					isGameRunning = true; // Set game running to true
-					this->scenes[currentScene].getMenu().removeStartButton(); // Remove start button
-					this->scenes[currentScene].getMenu().moveButtonsToTop(); // Move buttons to top
-					lastResizeTime = GetTime(); // Set last resize time
-				}
-				else if (n.getText() == "exit") { // If exit button is clicked
-					std::cout << "Exit button clicked - Suljetaan sovellus" << std::endl;
-					this->closeGame();
-					//exit(0); // Exit the application
-				}
-				else if (n.getText() == "resize") { // If resize button is clicked
-					std::cout << "Resize button clicked - Vaihdetaan ikkunan tila" << std::endl;
-					toggleFullScreen(); // Toggle fullscreen
-				}
-			}
-		}
-	} 
-	else { 		 
-		for (Nappi& n : this->scenes[currentScene].getMenu().getButtons()) { // Check if any button is clicked during the game
-			if (n.isClicked()) { // If button is clicked
-				std::cout << "Pelin aikana Nappi painettu: " << n.getText() << std::endl; // 🔍 DEBUG
-
-				if (n.getText() == "exit") { // If exit button is clicked
-					std::cout << "Exit button clicked - Palataan aloitusvalikkoon!" << std::endl;
-					resetToMainMenu(); // Reset to main menu
-				}
-				else if (n.getText() == "resize") { // If resize button is clicked
-					std::cout << "Resize button clicked - Vaihdetaan ikkunan tila pelin aikana" << std::endl;
+	 "Resize button clicked - Vaihdetaan ikkunan tila pelin aikana" << std::endl;
 					toggleFullScreen(); // Toggle fullscreen
 				}
 			}
 		}
 	}*/
+
+
+	//Temporary solution for enemy spawning		TODO: Make this good code :D
+	if(currentScene == 1){
+		spawnTime += GetFrameTime();
+
+		if(spawnTime > difficultyScale){
+			Vector2 playerPos = this->scenes[currentScene].getPlayer()->getPosition();
+			spawnTime = 0;
+			
+						
+			int x = rand()%10 + 2;	
+			int y = rand()%10 + 2;
+
+			if(rand() % 11 < 5)
+				x *= -1;
+			if(rand() % 11 < 5)
+				y *= -1;
+
+			difficultyScale -= 0.1;
+
+			this->scenes[currentScene].addEnemy(playerPos.x + (50 * x), playerPos.y + (50 * y), 0.3f, "assets/poffuTexture.png");
+		}
+	}
 
 	//TODO: Ehkä tän vois laittaa omaan funktioon, tai jopa menu luokkaan samalla lailla, kun piirto
 

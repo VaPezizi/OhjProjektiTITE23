@@ -26,6 +26,7 @@ public:
 	void addPlayer(float posX, float posY, const char* fileName);
 	void addPlayer(std::shared_ptr<Player>& player);
 	void addEnemy(float posX, float posY,float speed, const char* fileName);	
+	std::shared_ptr<Player>getPlayer();
 };
 
 #endif

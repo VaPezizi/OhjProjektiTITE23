@@ -19,13 +19,13 @@ public:
 	//	weapons.reserve(5);	
 		this->inventorySpace = 5;
 	}
-	Vector2 getPosition() const ;//{
+	Vector2 getPosition();//{
 //        return this->position;
  //   }
 	virtual void updateCharacter();
 	void addWeapon(const Weapon& weapon);
-	//const std::vector<Weapon>& getWeapons();
-	//const int& getInventorySpace();	
+	const std::vector<Weapon>& getWeapons();
+	const int& getInventorySpace();	
 	virtual ~Player();
 };
 

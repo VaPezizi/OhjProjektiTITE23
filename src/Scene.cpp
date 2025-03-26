@@ -87,3 +87,6 @@ void Scene::draw(){
 std::vector<std::shared_ptr<Character>>& Scene::getCharacters(){
 	return this->characters;
 }
+std::shared_ptr<Player> Scene::getPlayer(){
+	return this->player;
+}
