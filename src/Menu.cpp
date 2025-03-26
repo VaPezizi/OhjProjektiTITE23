@@ -1,6 +1,7 @@
 #include "Menu.h"
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 Menu::Menu(){
 	this->buttons = std::vector<Nappi>();
@@ -41,3 +42,13 @@ void Menu::removeStartButton() { // Remove start button
     buttons.erase(std::remove_if(buttons.begin(), buttons.end(), 
         [](const Nappi& n) { return n.getText() == "start"; }), buttons.end());
 }
+
+void Menu::draw(){
+	for(Nappi& n : this->buttons){
+		n.draw();	
+	}
+	for(Text& t: this->texts){
+		t.draw();
+	}
+}
+

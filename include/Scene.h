@@ -21,7 +21,7 @@ public:
 	Menu& getMenu();
 	void addCharacter(std::shared_ptr<Character>& character);
 	void addCharacter(float posX, float posY, const char* fileName);
-	void drawScene();
+	void draw();
 	void updateScene();
 	void addPlayer(float posX, float posY, const char* fileName);
 	void addPlayer(std::shared_ptr<Player>& player);

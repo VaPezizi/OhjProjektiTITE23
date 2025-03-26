@@ -19,6 +19,7 @@ public:
 	void removeTexts();
 	void moveButtonsToTop(); // Move buttons to top
 	void removeStartButton(); // Remove start button
+	void draw();
 };
 
 #endif
