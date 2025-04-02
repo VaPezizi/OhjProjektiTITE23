@@ -1,15 +1,17 @@
 #ifndef _PLAYER
 #define _PLAYER
 #include "Character.h"
+#include <memory>
 #include <raylib.h>
 #include <vector>
 #include "Weapon.h"
+#include "Wand.h"
 
 class Player : public Character{
 
 //using Character::Character;
 private:
-	//std::vector<Weapon>weapons;	
+	std::vector<std::shared_ptr<Weapon>>weapons;	
 	int inventorySpace;
 
 public:
@@ -18,14 +20,16 @@ public:
 		//Varataan muistia 5 aseelle
 	//	weapons.reserve(5);	
 		this->inventorySpace = 5;
+		this->weapons.push_back(std::shared_ptr<Weapon>(new Wand(5.0f, 10.0f, 10.0f, &this->position)));
 	}
 	Vector2 getPosition();//{
 //        return this->position;
  //   }
-	virtual void updateCharacter();
+	virtual void updateCharacter() override;
 	void addWeapon(const Weapon& weapon);
 	const std::vector<Weapon>& getWeapons();
 	const int& getInventorySpace();	
+	void drawCharacter() override;
 	virtual ~Player();
 };
 
