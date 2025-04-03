@@ -3,6 +3,8 @@
 #include "Player.h"
 #include <iostream>
 #include <memory>
+#include <ctime>
+#include <cstdlib>
 
 #ifndef _VECTOR
 #define _VECTOR
@@ -18,19 +20,20 @@
 #include "Text.h"
 #include "Nappi.h"
 
-// Create buttons		//TODO: Tehdään joku menu luokka tai joku semmonen johna tehdään napit.
-//Nappi startButton(200, 150, 150, 50, "start", GREEN);
-//Nappi exitButton(200, 250, 150, 50, "exit", RED);
-//Nappi resizeButton(200, 350, 150, 50, "resize", BLUE);
-
 //At this point, only initializes window and OpenGL context, but this function will expand
 void Game::initGame(const char* windowName){
 	InitWindow(this->screenWidth, this->screenHeight, windowName);
+
+	srand(time(NULL));	//Sets the seed for random number generation
+
 	camera.target = { 0.0f, 0.0f }; // Initial target (e.g., player position)
 	//camera.offset = { (float)this->screenWidth / 2, (float)this->screenHeight / 2 }; // Center of the screen
 	camera.offset = {0.0f, 0.0f};
 	camera.rotation = 0.0f;
 	camera.zoom = 1.0f;
+
+	ui = new UIElement(&camera, (Vector2){0, 0});
+
 	soundManager.loadSound("background", "assets/sounds/bg.mp3"); // Load background sound
  	soundManager.playSound("background"); // Play background sound
 	
@@ -55,8 +58,8 @@ void Game::startMainLoop(){
 		
 		//Drawing the game	
 		this->drawGame();
-		}
 	}
+}
 
 void Game::drawHealthBar(int x, int y, int width, int height, int currentHP, int maxHP) {
 	float hpPercent = (float)currentHP / maxHP;
@@ -81,41 +84,37 @@ void Game::drawHealthBar(int x, int y, int width, int height, int currentHP, int
 //All drawing should be done in this function
 void Game::drawGame(){
 	
-	Menu& menu = this->scenes[currentScene].getMenu();
-	std::vector<std::shared_ptr<Character>>& characters = this->scenes[currentScene].getCharacters();
+	/*Menu& menu = this->scenes[currentScene].getMenu();
+	std::vector<std::shared_ptr<Character>>& characters = this->scenes[currentScene].getCharacters();*/
+
+
 	//Starts Draw mode, all draw calls should be made here (if possible)
 	//We can draw in other places if needed, but opening draw mode has to be done there then.
 
 	BeginDrawing();
 	ClearBackground(WHITE);
 	BeginMode2D(camera);
+
+	ui->setPlayerHealth(playerHealth);
+    ui->setPlayerMaxHealth(playerMaxHealth);
+    // Jos sinulla on pelaaja-olio, päivitä taso ja XP
+    if(!scenes[currentScene].getCharacters().empty()){
+        Character& player = *scenes[currentScene].getCharacters().front();
+        ui->setLevel(player.getLevel());
+        ui->setCurrentXP(player.getExperiencePoints());
+        ui->setXpThreshold(player.getXpThreshold());
+    }
+    ui->setDisplayedTime(displayedTime);
+    
+    // Piirrä UI (HUD)
+    ui->draw();
 	
 
-	if (!isGameRunning) {
-		for (Nappi& n : menu.getButtons()) {
-			n.draw();
-		}
-		for (Text& t : menu.getTexts()) {
-			t.draw();
-		}
-	} 
-	// Draw buttons
-	/*
-	startButton.draw();
-	exitButton.draw();
-	resizeButton.draw();
-	*/
+	//menu.draw();
+	scenes[currentScene].draw();
 
-	for(Nappi& n : menu.getButtons()){
-		n.draw();	
-	}
-	for(Text& t : menu.getTexts()){
-		t.draw();
-	}
 
-	//DrawText("Hello World", this->screenWidth / 2, this->screenHeight / 2, 20, BLACK);
-
-	for(std::shared_ptr<Character>& c : characters){
+	/*for(std::shared_ptr<Character>& c : characters){
 		//c.drawCharacter(&this->textureManager);
 		c->drawCharacter();
 	}
@@ -171,6 +170,7 @@ void Game::drawGame(){
 		c->drawCharacter();
 	}
 	
+	}*/	
 	EndDrawing();
 }
 
@@ -226,46 +226,39 @@ void Game::updateGame(){
 
 	
 /*	
-	if (!isGameRunning) {  
-		for (Nappi& n : this->scenes[currentScene].getMenu().getButtons()) { // Check if any button is clicked during the main menu
-			if (n.isClicked()) { // If button is clicked
-				std::cout << "Nappi painettu: " << n.getText() << std::endl; // 🔍 DEBUG
-
-				if (n.getText() == "start") { // If start button is clicked
-					std::cout << "Start button clicked - Peli alkaa!" << std::endl; //  DEBUG
-					isGameRunning = true; // Set game running to true
-					this->scenes[currentScene].getMenu().removeStartButton(); // Remove start button
-					this->scenes[currentScene].getMenu().moveButtonsToTop(); // Move buttons to top
-					lastResizeTime = GetTime(); // Set last resize time
-				}
-				else if (n.getText() == "exit") { // If exit button is clicked
-					std::cout << "Exit button clicked - Suljetaan sovellus" << std::endl;
-					this->closeGame();
-					//exit(0); // Exit the application
-				}
-				else if (n.getText() == "resize") { // If resize button is clicked
-					std::cout << "Resize button clicked - Vaihdetaan ikkunan tila" << std::endl;
-					toggleFullScreen(); // Toggle fullscreen
-				}
-			}
-		}
-	} 
-	else { 		 
-		for (Nappi& n : this->scenes[currentScene].getMenu().getButtons()) { // Check if any button is clicked during the game
-			if (n.isClicked()) { // If button is clicked
-				std::cout << "Pelin aikana Nappi painettu: " << n.getText() << std::endl; // 🔍 DEBUG
-
-				if (n.getText() == "exit") { // If exit button is clicked
-					std::cout << "Exit button clicked - Palataan aloitusvalikkoon!" << std::endl;
-					resetToMainMenu(); // Reset to main menu
-				}
-				else if (n.getText() == "resize") { // If resize button is clicked
-					std::cout << "Resize button clicked - Vaihdetaan ikkunan tila pelin aikana" << std::endl;
+	 "Resize button clicked - Vaihdetaan ikkunan tila pelin aikana" << std::endl;
 					toggleFullScreen(); // Toggle fullscreen
 				}
 			}
 		}
 	}*/
+
+
+	//Temporary solution for enemy spawning		TODO: Make this good code :D
+	if(currentScene == 1){
+		spawnTime += GetFrameTime();
+
+		if(spawnTime > difficultyScale){
+			Vector2 playerPos = this->scenes[currentScene].getPlayer()->getPosition();
+			spawnTime = 0;
+			
+						
+			int x = rand()%10 + 2;	
+			int y = rand()%10 + 2;
+
+			if(rand() % 11 < 5)
+				x *= -1;
+			if(rand() % 11 < 5)
+				y *= -1;
+
+			difficultyScale -= 0.1;
+
+			this->scenes[currentScene].addEnemy(playerPos.x + (50 * x), playerPos.y + (50 * y), 0.3f, "assets/poffuTexture.png");
+		}
+	}
+
+	//TODO: Ehkä tän vois laittaa omaan funktioon, tai jopa menu luokkaan samalla lailla, kun piirto
+
 	for(Nappi& n : this->scenes[currentScene].getMenu().getButtons()){
 		if(n.isClicked()){
 			if(n.getText() == "start"){
@@ -348,7 +341,6 @@ void Game::makeGameScene(){
 
 	scene.addPlayer(400.0f, 400.0f, "assets/testTexture.png");
 	scene.addEnemy(450.0f, 450.0f, 0.3f, "assets/poffuTexture.png"); 
-
 }
 
 void Game::makeMenu2(){

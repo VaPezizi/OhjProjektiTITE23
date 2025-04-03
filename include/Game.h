@@ -12,6 +12,7 @@
 #include "Character.h"
 #include "SoundManager.h"
 #include "TextureManager.h"
+#include "UIElement.h"
 //#include "Menu.h"
 #include "Scene.h"
 //#include "Player.h"
@@ -25,6 +26,7 @@ protected:
 
 	int windowPosX = 100; // Window position X
 	int windowPosY = 100; // Window position Y
+	float difficultyScale = 5;	
 
 	Vector2 mousePos; 
 	Camera2D camera; // Add a Camera2D object
@@ -35,7 +37,9 @@ protected:
 	int playerMaxHealth = 100;
 
 
-/*	
+
+	float spawnTime = 0;	
+	/*
 	Menu menu;
 	std::vector<Character> characters;
 	*/
@@ -60,6 +64,7 @@ private:
 	
 	bool isPaused = false; // Is paused
 
+	UIElement* ui;
 
 public: 
 	Game(const int& screenWidth, const int& screenHeight, const int& FPS){

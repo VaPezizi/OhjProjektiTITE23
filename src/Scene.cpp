@@ -1,9 +1,12 @@
 #include "Scene.h"
+#include "raylib.h"
+#include "Weapon.h"
 #include "Player.h"
 #include "TextureManager.h"
 #include <vector>
 #include <memory>
 #include "Enemy.h"
+#include "UIElement.h"
 
 Scene::Scene(TextureManager * textureManager){		//TODO: Lisää tänne taustakuva 
 	this->characters = std::vector<std::shared_ptr<Character>>();
@@ -69,6 +72,22 @@ void Scene::addCharacter(float posX, float posY, const char* fileName){
 Menu& Scene::getMenu(){
 	return this->menu;
 }
+void Scene::draw(){
+	this->menu.draw();
+	for(std::shared_ptr<Character>& c : this->characters){
+		c->drawCharacter();
+	}
+	/*for(const Weapon& weapon : this->player->getWeapons()){
+		
+	}*/
+	/*for(int i = 0; i < this->player->getInventorySpace(); i++){
+		DrawRectangleLines(10 * i, 10, 20, 20, BLACK);
+		
+	}*/	
+}
 std::vector<std::shared_ptr<Character>>& Scene::getCharacters(){
 	return this->characters;
+}
+std::shared_ptr<Player> Scene::getPlayer(){
+	return this->player;
 }

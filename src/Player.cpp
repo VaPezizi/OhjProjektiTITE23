@@ -1,4 +1,6 @@
 #include "Player.h"
+#include <memory>
+#include <vector>
 
 void Player::updateCharacter(){
 	
@@ -9,7 +11,6 @@ void Player::updateCharacter(){
 	if (movingHorizontally && movingVertically) {
 		speed *= 0.7f;
 	}
-
 	if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) 
 		moveCharacter(0, -speed);
 	if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) 
@@ -19,8 +20,26 @@ void Player::updateCharacter(){
 	if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) 
 		moveCharacter(speed, 0);
 
+	for(std::shared_ptr<Weapon> weapon : this->weapons)
+		weapon->update();
+
 }
-Vector2 Player::getPosition() const{
+Vector2 Player::getPosition(){
 	return this->position;
+}/*
+void Player::addWeapon(const Weapon& weapon){
+	this->weapons.push_back(weapon);
+}
+const std::vector<Weapon>& Player::getWeapons(){
+	return this->weapons;
+}*/
+void Player::drawCharacter(){
+	for(std::shared_ptr<Weapon>& weapon : this->weapons){
+		weapon->draw();
+	}
+	Character::drawCharacter();
+}
+const int& Player::getInventorySpace(){
+	return this->inventorySpace;
 }
 Player::~Player(){}

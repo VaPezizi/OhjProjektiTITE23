@@ -39,7 +39,7 @@ public:
 		//std::cout << "MORO\n";
 		return *this;
 	}
-	void drawCharacter();
+	virtual void drawCharacter();
 
 	//Used to move the character by x and y values. 
 	void moveCharacter(float x, float y);
