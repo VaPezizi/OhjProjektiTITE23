@@ -100,7 +100,7 @@ void Scene::updateCamera() {
     if (player) {
         camera.target = player->getPosition(); // Update the camera target to follow the player
     } else {
-        camera.target = { 0.0f, 0.0f }; // Default target if no player exists
+        camera.target = camera.offset = { (float)GetScreenWidth() / 2, (float)GetScreenHeight() / 2 }; // Default target if no player exists
     }
 }
 
