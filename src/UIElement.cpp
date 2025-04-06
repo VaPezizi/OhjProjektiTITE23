@@ -3,40 +3,40 @@
 #include <string>
 
 void UIElement::updateTexts() {
-    // Lasketaan paikallisesti HUD-koordinaatit, emmekä muuta cam:ia tai positionia
-    float hudX = cam->target.x + (GetScreenWidth() / 2) - 170;
-    float hudY = cam->target.y - (GetScreenHeight() / 2) + 20;
-    
-    // Päivitetään tason teksti ja asetetaan sijainti
+    // Calculate HUD coordinates relative to the camera's visible area
+    float hudX = cam->target.x - cam->offset.x + GetScreenWidth() - barWidth - 20; // 20px padding from the right
+    float hudY = cam->target.y - cam->offset.y + 20; // 20px padding from the top
+
+    // Update level text
     std::string levelStr = "Level: " + std::to_string(level);
     levelText.setText(levelStr);
     levelText.setPos(hudX, hudY + 25);
-    
-    // Päivitetään XP-teksti ja asetetaan sijainti
+
+    // Update XP text
     std::string xpStr = "XP: " + std::to_string(currentXP) + "/" + std::to_string(xpThreshold);
     xpText.setText(xpStr);
     xpText.setPos(hudX, hudY + 50);
 
-    // Päivitetään ajastimen teksti
+    // Update timer text
     int minutes = displayedTime / 60;
     int seconds = displayedTime % 60;
     std::string timerStr = (minutes < 10 ? "0" : "") + std::to_string(minutes) + ":" +
                            (seconds < 10 ? "0" : "") + std::to_string(seconds);
     timerText.setText(timerStr);
-    
-    // Aseta ajastimen sijainti keskelle vaakasuunnassa
+
+    // Align the timer text to the right edge of the HUD
     int textWidth = MeasureText(timerStr.c_str(), 30);
-    float timerX = cam->target.x - (GetScreenWidth() / 2) + ((GetScreenWidth() - textWidth) / 2);
-    float timerY = cam->target.y - (GetScreenHeight() / 2) + 20;
+    float timerX = hudX + barWidth - textWidth;
+    float timerY = hudY;
     timerText.setPos(timerX, timerY);
 }
 
 void UIElement::draw() {
-    // Lasketaan paikallisesti HUD-koordinaatit
-    float hudX = cam->target.x + (GetScreenWidth() / 2) - 170;
-    float hudY = cam->target.y - (GetScreenHeight() / 2) + 20;
+    // Calculate HUD coordinates relative to the camera's visible area
+    float hudX = cam->target.x - cam->offset.x + GetScreenWidth() - barWidth - 20; // 20px padding from the right
+    float hudY = cam->target.y - cam->offset.y + 20; // 20px padding from the top
 
-    // Piirretään terveyspalkki
+    // Draw health bar
     float hpPercent = (float)playerHealth / playerMaxHealth;
     Color barColor = GREEN;
     if (hpPercent > 0.7f)
@@ -52,7 +52,7 @@ void UIElement::draw() {
     DrawRectangle(hudX + 1, hudY + 1, (int)((barWidth - 2) * hpPercent), barHeight - 2, barColor);
     DrawRectangleLines(hudX, hudY, barWidth, barHeight, BLACK);
 
-    // Päivitetään ja piirretään tekstit Text-luokan avulla
+    // Update and draw texts
     updateTexts();
     levelText.draw();
     xpText.draw();

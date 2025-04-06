@@ -27,7 +27,7 @@ void Game::initGame(const char* windowName){
 
 	srand(time(NULL));	//Sets the seed for random number generation
 
-	ui = new UIElement(&camera, (Vector2){0, 0});
+	ui = new UIElement(&scenes[currentScene].getCamera(), (Vector2){0, 0});
 	soundManager.loadSound("background", "assets/sounds/bg.mp3"); // Load background sound
  	soundManager.playSound("background"); // Play background sound
 	
@@ -88,11 +88,13 @@ void Game::drawGame(){
 
 	BeginDrawing();
 	ClearBackground(WHITE);
-	BeginMode2D(camera);
+	
 	
 
 	//menu.draw();
 	scenes[currentScene].draw();
+	
+	
 
 	/*for(std::shared_ptr<Character>& c : characters){
 		//c.drawCharacter(&this->textureManager);
@@ -114,39 +116,19 @@ void Game::closeGame(){
 }
 
 void Game::updateGame(){
-	// Päivitetään jokaisen hahmon tila
-	//pelaaja.updateCharacter();	
-	
-	for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
-		character->updateCharacter();
-		
-		
-		std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(character);
+	scenes[currentScene].updateCamera(); // Update the camera in the current scene
 
-		if(player != nullptr)
-			camera.target = { player->getPosition().x, player->getPosition().y }; // Update camera target to player's position
-	}
+    for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
+        character->updateCharacter();
+    }
 
-	/*for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
-        // Check if the character is a Player
-        std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(character);
-        if (player) {
-            break; // Exit the loop once the player is found
-        }*/
-    
-
-	if (IsKeyPressed(KEY_F11)) { // If F11 is pressed
-		std::cout << "F11 painettu - Vaihdetaan ikkunan tilaa" << std::endl;
-		toggleFullScreen(); // Toggle fullscreen
-	}
-/*	
-	 "Resize button clicked - Vaihdetaan ikkunan tila pelin aikana" << std::endl;
-					toggleFullScreen(); // Toggle fullscreen
-				}
-			}
-		}
-	}*/
-
+    if (IsKeyPressed(KEY_F11)) {
+        toggleFullScreen();
+    }
+	if (currentScene == 0 && IsKeyPressed(KEY_ENTER)) { // entterillä pelaan
+        currentScene = 1; 
+        isGameRunning = true;
+    }
 
 	//Temporary solution for enemy spawning		TODO: Make this good code :D
 	if(currentScene == 1){
@@ -178,8 +160,6 @@ void Game::updateGame(){
 			if(n.getText() == "start"){
 				currentScene = 1;
 				isGameRunning = true;
-				camera.offset = { (float)this->screenWidth / 2, (float)this->screenHeight / 2 }; // Center of the screen
-				camera.target = {400.0f, 400.0f};
 			}
 			if(n.getText() == "exit" && !isGameRunning){
 				//currentScene = 1;
@@ -188,29 +168,18 @@ void Game::updateGame(){
 			else if(n.getText() == "exit"){
 				isGameRunning = false;
 				currentScene = 0;
-				resetGameStats();
 			}
 			if(n.getText() == "resize"){
 				toggleFullScreen();
 			}
-			// Functionality for the pause button
-			if (n.getText() == "pause") {
-				isPaused = !isPaused; // Toggle the pause state on or off
-			}
-		}
-
-		if (isGameRunning && !isPaused) {
-			updateTimer(); // Päivitä ajastin normaalisti
-			scenes[currentScene].getCharacters().front()->updateExperience(); 
 		}
 		
-		
-		if (isGameRunning) {
-			std::shared_ptr<Character> player = scenes[currentScene].getCharacters().front(); 
-		}
-			
 	}
+
 }
+
+	//TODO: Ehkä tän vois laittaa omaan funktioon, tai jopa menu luokkaan samalla lailla, kun piirto
+
 /*void Game::addCharacter(Character& character){
 	this->scenes[currentScene].getCharacters().push_back(character);
 }*/
@@ -235,8 +204,8 @@ void Game::addCharacter(float posX, float posY, const char* fileName){
 */
 void Game::resetToMainMenu() {
 	currentScene = 0;
-	camera.offset = {0.0f, 0.0f};
-	camera.target = {0.0f, 0.0f};
+	//camera.offset = {0.0f, 0.0f};
+	//camera.target = {0.0f, 0.0f};
 }
 
 //Pelin "pää scene"

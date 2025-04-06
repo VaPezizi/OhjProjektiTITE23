@@ -7,10 +7,12 @@
 #include "Player.h"
 #include <memory>
 #include "raylib.h"
+#include "UIElement.h" // Include the header file for UIElement
 
 class Scene {
 private:
     std::vector<std::shared_ptr<Character>> characters;
+    std::shared_ptr<UIElement> ui; // UI element for the scene
     TextureManager* textureManager;
     Menu menu;
     std::string taustaKuva;
