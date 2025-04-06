@@ -13,7 +13,7 @@ void Enemy::updateCharacter(){
 
 
 	Vector2 moveDirection = Vector2MoveTowards(this->position, player->getPosition(), this->speed);
-	std::cout << "X: " << moveDirection.x << "\nY: " << moveDirection.y << std::endl;
+	//std::cout << "X: " << moveDirection.x << "\nY: " << moveDirection.y << std::endl;
 
 	this->position = moveDirection;
 
