@@ -26,11 +26,7 @@ void Game::initGame(const char* windowName){
 
 	srand(time(NULL));	//Sets the seed for random number generation
 
-	//camera.target = { 0.0f, 0.0f }; // Initial target (e.g., player position)
-	//camera.offset = { (float)this->screenWidth / 2, (float)this->screenHeight / 2 }; // Center of the screen
-	//camera.offset = {0.0f, 0.0f};
-	//camera.rotation = 0.0f;
-	//camera.zoom = 1.0f;
+	
 	soundManager.loadSound("background", "assets/sounds/bg.mp3"); // Load background sound
  	soundManager.playSound("background"); // Play background sound
 	
@@ -168,8 +164,8 @@ void Game::addCharacter(float posX, float posY, const char* fileName){
 */
 void Game::resetToMainMenu() {
 	currentScene = 0;
-	//camera.offset = {0.0f, 0.0f}; TODO: Tämä ei toimi, koska camera on nyt Scene-luokassa
-	//camera.target = {0.0f, 0.0f}; TODO: xdd
+	//camera.offset = {0.0f, 0.0f}; 
+	//camera.target = {0.0f, 0.0f}; 
 
 }
 
@@ -233,10 +229,11 @@ void Game::toggleFullScreen() {
         ToggleFullscreen();
     }
 
-    updateButtonPositions(); // 🔹 Päivitetään nappien paikat, kun ruudun koko muuttuu!
+    // Update the camera after toggling fullscreen
+    scenes[currentScene].updateCamera();
 }
 
-
+/*
 void Game::updateButtonPositions() {
     int screenWidth = GetScreenWidth();   // Haetaan nykyinen ruudun leveys
     int screenHeight = GetScreenHeight(); // Haetaan nykyinen ruudun korkeus
@@ -255,6 +252,6 @@ void Game::updateButtonPositions() {
         }
     }
 }
-
+*/
 
 

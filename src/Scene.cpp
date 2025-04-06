@@ -15,7 +15,7 @@ Scene::Scene(TextureManager* textureManager) { // TODO: Lisää tänne taustakuv
     this->textureManager = textureManager;
     this->backgroundTexture = { 0 }; // Initialize background texture
 	camera.target = { 0.0f, 0.0f }; // Default target position
-    camera.offset = { (float)GetScreenWidth() / 2, (float)GetScreenHeight() / 2 }; // Center of the screen
+    camera.offset = { (float)GetScreenWidth() / 2, (float)GetScreenHeight() /2 }; // Center of the screen
     camera.rotation = 0.0f;         // No rotation
     camera.zoom = 1.0f;             // Default zoom level
 
@@ -99,9 +99,12 @@ Menu& Scene::getMenu(){
 void Scene::updateCamera() {
     if (player) {
         camera.target = player->getPosition(); // Update the camera target to follow the player
-    } else {
-        camera.target = camera.offset = { (float)GetScreenWidth() / 2, (float)GetScreenHeight() / 2 }; // Default target if no player exists
+    }else{
+        camera.target = camera.offset; // Default target position if no player is set
     }
+
+    // Update the camera offset to center the screen
+    camera.offset = { (float)GetScreenWidth() / 2, (float)GetScreenHeight() / 2 };
 }
 
 Camera2D& Scene::getCamera() {
@@ -127,9 +130,10 @@ void Scene::draw() {
         int startY = static_cast<int>(floor(cameraTop / tileHeight));
         int endX = static_cast<int>(ceil(cameraRight / tileWidth));
         int endY = static_cast<int>(ceil(cameraBottom / tileHeight));
-		std::cout << "Camera bounds: Left=" << cameraLeft << ", Top=" << cameraTop
-          << ", Right=" << cameraRight << ", Bottom=" << cameraBottom << std::endl;
-		std::cout << "Drawing tile at: (" << camera.target.x * tileWidth << ", " << camera.target.y * tileHeight << ")" << std::endl;
+        // kameran debuggaus stringit
+		//std::cout << "Camera bounds: Left=" << cameraLeft << ", Top=" << cameraTop
+        //  << ", Right=" << cameraRight << ", Bottom=" << cameraBottom << std::endl;
+		//std::cout << "Drawing tile at: (" << camera.target.x * tileWidth << ", " << camera.target.y * tileHeight << ")" << std::endl;
         // Draw the tiles
         for (int x = startX; x < endX; ++x) {
             for (int y = startY; y < endY; ++y) {
