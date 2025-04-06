@@ -19,6 +19,7 @@
 #include "Menu.h"
 #include "Text.h"
 #include "Nappi.h"
+#include "Scene.h"
 
 //At this point, only initializes window and OpenGL context, but this function will expand
 void Game::initGame(const char* windowName){
@@ -26,7 +27,7 @@ void Game::initGame(const char* windowName){
 
 	srand(time(NULL));	//Sets the seed for random number generation
 
-	
+	ui = new UIElement(&camera, (Vector2){0, 0});
 	soundManager.loadSound("background", "assets/sounds/bg.mp3"); // Load background sound
  	soundManager.playSound("background"); // Play background sound
 	
@@ -54,16 +55,50 @@ void Game::startMainLoop(){
 	}
 }
 
+void Game::drawHealthBar(int x, int y, int width, int height, int currentHP, int maxHP) {
+	float hpPercent = (float)currentHP / maxHP;
+	Color barColor;
 
+	if (hpPercent > 0.7f) barColor = GREEN;
+	else if (hpPercent > 0.4f) barColor = YELLOW;
+	else if (hpPercent > 0.2f) barColor = ORANGE;
+	else barColor = RED;
+
+	// Draw bar background (empty)
+	DrawRectangle(x, y, width, height, WHITE);
+
+	// Draw filled HP portion
+	DrawRectangle(x + 1, y + 1, (int)((width - 2) * hpPercent), height - 2, barColor);
+
+	// Draw border
+	DrawRectangleLines(x, y, width, height, BLACK);
+}
+	
 
 //All drawing should be done in this function
-void Game::drawGame() {
-    BeginDrawing();
-    ClearBackground(WHITE);
+void Game::drawGame(){
+	
+	/*Menu& menu = this->scenes[currentScene].getMenu();
+	std::vector<std::shared_ptr<Character>>& characters = this->scenes[currentScene].getCharacters();*/
 
-    scenes[currentScene].draw(); // The camera is now managed by the Scene class
 
-    EndDrawing();
+	//Starts Draw mode, all draw calls should be made here (if possible)
+	//We can draw in other places if needed, but opening draw mode has to be done there then.
+
+
+	BeginDrawing();
+	ClearBackground(WHITE);
+	BeginMode2D(camera);
+	
+
+	//menu.draw();
+	scenes[currentScene].draw();
+
+	/*for(std::shared_ptr<Character>& c : characters){
+		//c.drawCharacter(&this->textureManager);
+		c->drawCharacter();
+	}*/	
+	EndDrawing();
 }
 
 //Put everything you want to do before the game closes here
@@ -78,20 +113,40 @@ void Game::closeGame(){
 	exit(0);
 }
 
-void Game::updateGame() {
-    scenes[currentScene].updateCamera(); // Update the camera in the current scene
+void Game::updateGame(){
+	// Päivitetään jokaisen hahmon tila
+	//pelaaja.updateCharacter();	
+	
+	for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
+		character->updateCharacter();
+		
+		
+		std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(character);
 
-    for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
-        character->updateCharacter();
-    }
+		if(player != nullptr)
+			camera.target = { player->getPosition().x, player->getPosition().y }; // Update camera target to player's position
+	}
 
-    if (IsKeyPressed(KEY_F11)) {
-        toggleFullScreen();
-    }
-	if (currentScene == 0 && IsKeyPressed(KEY_ENTER)) { // entterillä pelaan
-        currentScene = 1; 
-        isGameRunning = true;
-    }
+	/*for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
+        // Check if the character is a Player
+        std::shared_ptr<Player> player = std::dynamic_pointer_cast<Player>(character);
+        if (player) {
+            break; // Exit the loop once the player is found
+        }*/
+    
+
+	if (IsKeyPressed(KEY_F11)) { // If F11 is pressed
+		std::cout << "F11 painettu - Vaihdetaan ikkunan tilaa" << std::endl;
+		toggleFullScreen(); // Toggle fullscreen
+	}
+/*	
+	 "Resize button clicked - Vaihdetaan ikkunan tila pelin aikana" << std::endl;
+					toggleFullScreen(); // Toggle fullscreen
+				}
+			}
+		}
+	}*/
+
 
 	//Temporary solution for enemy spawning		TODO: Make this good code :D
 	if(currentScene == 1){
@@ -123,6 +178,8 @@ void Game::updateGame() {
 			if(n.getText() == "start"){
 				currentScene = 1;
 				isGameRunning = true;
+				camera.offset = { (float)this->screenWidth / 2, (float)this->screenHeight / 2 }; // Center of the screen
+				camera.target = {400.0f, 400.0f};
 			}
 			if(n.getText() == "exit" && !isGameRunning){
 				//currentScene = 1;
@@ -131,14 +188,28 @@ void Game::updateGame() {
 			else if(n.getText() == "exit"){
 				isGameRunning = false;
 				currentScene = 0;
+				resetGameStats();
 			}
 			if(n.getText() == "resize"){
 				toggleFullScreen();
 			}
+			// Functionality for the pause button
+			if (n.getText() == "pause") {
+				isPaused = !isPaused; // Toggle the pause state on or off
+			}
+		}
+
+		if (isGameRunning && !isPaused) {
+			updateTimer(); // Päivitä ajastin normaalisti
+			scenes[currentScene].getCharacters().front()->updateExperience(); 
 		}
 		
+		
+		if (isGameRunning) {
+			std::shared_ptr<Character> player = scenes[currentScene].getCharacters().front(); 
+		}
+			
 	}
-
 }
 /*void Game::addCharacter(Character& character){
 	this->scenes[currentScene].getCharacters().push_back(character);
@@ -164,9 +235,8 @@ void Game::addCharacter(float posX, float posY, const char* fileName){
 */
 void Game::resetToMainMenu() {
 	currentScene = 0;
-	//camera.offset = {0.0f, 0.0f}; 
-	//camera.target = {0.0f, 0.0f}; 
-
+	camera.offset = {0.0f, 0.0f};
+	camera.target = {0.0f, 0.0f};
 }
 
 //Pelin "pää scene"
@@ -187,12 +257,14 @@ void Game::makeGameScene(){
 void Game::makeMenu2(){
 	scenes.push_back(Scene(&this->textureManager));
 	Menu& menu = scenes[currentScene + 1].getMenu();
+	menu.addButton(Nappi(100, 250, 150, 50, "pause", ORANGE));
 	menu.addButton(Nappi(100, 50, 150, 50, "resize", BLUE));	
 	menu.addButton(Nappi(100, 150, 150, 50, "exit", RED));	
 
 	//isGameRunning = true;
 	//currentScene = 1;
-}
+
+	} 
 
 void Game::makeMainMenu(){
 
@@ -229,11 +301,10 @@ void Game::toggleFullScreen() {
         ToggleFullscreen();
     }
 
-    // Update the camera after toggling fullscreen
-    scenes[currentScene].updateCamera();
+    updateButtonPositions(); // 🔹 Päivitetään nappien paikat, kun ruudun koko muuttuu!
 }
 
-/*
+
 void Game::updateButtonPositions() {
     int screenWidth = GetScreenWidth();   // Haetaan nykyinen ruudun leveys
     int screenHeight = GetScreenHeight(); // Haetaan nykyinen ruudun korkeus
@@ -252,6 +323,6 @@ void Game::updateButtonPositions() {
         }
     }
 }
-*/
+
 
 

@@ -14,6 +14,13 @@ class Character{
 	Character & operator=(const Character&) = delete;
 	Character(const Character&) = delete;
 */	
+
+private:
+    int experiencePoints = 0;
+    int level = 1;
+    int xpThreshold = 100;
+
+
 protected: 
 	Vector2 position;
 	std::string texture;
@@ -37,8 +44,15 @@ public:
 	//Used to move the character by x and y values. 
 	void moveCharacter(float x, float y);
 
+
+	void updateExperience();
+    int getExperiencePoints() const { return experiencePoints; }
+    int getLevel() const { return level; }
+    int getXpThreshold() const { return xpThreshold; }
+    void resetStats(); 
+
 	//Used to update the character.
 	virtual void updateCharacter();		//Virtual method that derived classes can override. 
-
+	
 };
 #endif

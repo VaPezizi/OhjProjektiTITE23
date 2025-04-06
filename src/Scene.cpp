@@ -7,6 +7,7 @@
 #include <memory>
 #include "Enemy.h"
 #include <cmath> // For floor function
+#include "UIElement.h"
 
 Scene::Scene(TextureManager* textureManager) { // TODO: Lisää tänne taustakuva
     this->characters = std::vector<std::shared_ptr<Character>>();

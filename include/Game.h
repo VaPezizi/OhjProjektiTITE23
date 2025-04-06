@@ -12,6 +12,7 @@
 #include "Character.h"
 #include "SoundManager.h"
 #include "TextureManager.h"
+#include "UIElement.h"
 //#include "Menu.h"
 #include "Scene.h"
 //#include "Player.h"
@@ -31,6 +32,12 @@ protected:
 	//Camera2D camera; // Add a Camera2D object
 
 	bool fullScreen = 0; 
+	
+	int playerHealth = 100;
+	int playerMaxHealth = 100;
+
+
+
 	float spawnTime = 0;	
 	/*
 	Menu menu;
@@ -48,6 +55,16 @@ private:
 	SoundManager soundManager;
 	TextureManager textureManager;
 	void resetToMainMenu(); // Reset to main menu
+	void updateTimer();   // Updates the game timer to track elapsed time
+    void updateExperience();  // Updates the player's experience points
+	void resetGameStats();  // Resets all game statistics to their default values
+
+    float elapsedTime;
+    int displayedTime;
+	
+	bool isPaused = false; // Is paused
+
+	UIElement* ui;
 
 public: 
 	Game(const int& screenWidth, const int& screenHeight, const int& FPS){
@@ -74,8 +91,14 @@ public:
 	void addPlayer(float posX, float posY, const char* fileName);
 	void addCharacter(float posX, float posY, const char* fileName);
 	void toggleFullScreen(); // Toggle fullscreen
-	void makeGameScene();	
-	void makeMenu2();
+
+	void drawHealthBar(int x, int y, int width, int height, int currentHP, int maxHP);
+	void takeDamage(int amount);
 	
+	void makeGameScene();	
+
+	void makeMenu2();
+    void resetHealth();
+
 };
 #endif
