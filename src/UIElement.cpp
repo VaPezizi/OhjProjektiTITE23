@@ -52,6 +52,7 @@ void UIElement::draw() {
     else
         barColor = RED;
 
+    DrawRectangle(hudX, hudY - 50, barWidth, 50, WHITE);
     DrawRectangle(hudX, hudY, barWidth, barHeight, WHITE);
     DrawRectangle(hudX + 1, hudY + 1, (int)((barWidth - 2) * hpPercent), barHeight - 2, barColor);
     DrawRectangleLines(hudX, hudY, barWidth, barHeight, BLACK);
