@@ -44,6 +44,7 @@ public:
     void setCurrentXP(int xp) { currentXP = xp; }
     void setXpThreshold(int threshold) { xpThreshold = threshold; }
     void setDisplayedTime(int time) { displayedTime = time; }
+    void setPlayerPosition(const Vector2& playerPos); // New method to update player position
 
     // Päivittää tekstien sisältöä ja sijainteja
     void updateTexts();

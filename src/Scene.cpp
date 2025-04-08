@@ -100,8 +100,9 @@ Menu& Scene::getMenu(){
 
 void Scene::updateCamera() {
     if (player) {
-        camera.target = player->getPosition(); // Update the camera target to follow the player     
-    }else{
+        camera.target = player->getPosition(); // Update the camera target to follow the player
+        ui->setPlayerPosition(player->getPosition()); // Update HUD position to follow the player
+    } else {
         camera.target = camera.offset; // Default target position if no player is set
     }
 
@@ -147,6 +148,11 @@ void Scene::draw() {
     for (std::shared_ptr<Character>& c : this->characters) {
         c->drawCharacter();
     }
+
+    // Update the timer in the HUD
+    static float elapsedTime = 0.0f;
+    elapsedTime += GetFrameTime(); // Increment elapsed time by the time since the last frame
+    ui->setDisplayedTime(static_cast<int>(elapsedTime)); // Update the displayed time in seconds
 
     // Draw HUD (UI)
     ui->draw();
