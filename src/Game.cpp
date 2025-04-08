@@ -71,7 +71,7 @@ void Game::drawGame() {
 void Game::closeGame(){
 	this->textureManager.unloadAllTextures();
 	for(auto& i:this->scenes){
-		i.getCharacters().clear();
+		i.getCharacters()->clear();
 	}
 	soundManager.unloadAllSounds();
 	CloseWindow();
@@ -81,8 +81,20 @@ void Game::closeGame(){
 void Game::updateGame() {
     scenes[currentScene].updateCamera(); // Update the camera in the current scene
 
-    for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
+    /*for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
         character->updateCharacter();
+    }*/
+    std::deque<std::shared_ptr<Character>>& characters = *this->scenes[currentScene].getCharacters();
+    for(auto it = characters.begin(); it != characters.end();){
+	(*it)->updateCharacter(&characters);
+	if((*it)->getKilled()){
+		std::cout << "Erase p 1\n";
+		it = characters.erase(it);
+
+		std::cout << "Erase p 2\n";
+	}else{
+		++it;
+	}
     }
 
     if (IsKeyPressed(KEY_F11)) {
@@ -140,28 +152,6 @@ void Game::updateGame() {
 	}
 
 }
-/*void Game::addCharacter(Character& character){
-	this->scenes[currentScene].getCharacters().push_back(character);
-}*/
-
-
-/*
- * Lisää pelaajan.
- * Huomiona, että nykyään hahmot ovat pointtereina, jolloin listan olioita voidaan käsitellä
- * Characterin alaluokkien olioina.
- * Tämä toiminnallisuus tulee vain pointtereilla
- */
-/*
-void Game::addPlayer(float posX, float posY, const char* fileName){
-	this->scenes[currentScene].getCharacters().push_back(
-		std::shared_ptr<Character>(new Player{posX, posY, fileName, &this->textureManager}));
-}
-
-void Game::addCharacter(float posX, float posY, const char* fileName){
-	this->scenes[currentScene].getCharacters().push_back(
-		std::shared_ptr<Character>(new Character{posX, posY, fileName, &this->textureManager}));
-}
-*/
 void Game::resetToMainMenu() {
 	currentScene = 0;
 	//camera.offset = {0.0f, 0.0f}; 

@@ -1,28 +1,41 @@
 #include "Player.h"
+#include <deque>
 #include <memory>
 #include <vector>
 
-void Player::updateCharacter(){
+void Player::updateCharacter(std::deque<std::shared_ptr<Character>>*characters){
 	
 	float speed = 1.0f;
-	bool movingHorizontally = IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT);
-	bool movingVertically = IsKeyDown(KEY_W) || IsKeyDown(KEY_UP) || IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN);
+	bool movingHorizontally = IsKeyDown(KEY_A) ||  IsKeyDown(KEY_D);
+	bool movingVertically = IsKeyDown(KEY_W) || IsKeyDown(KEY_S);
 
 	if (movingHorizontally && movingVertically) {
 		speed *= 0.7f;
 	}
-	if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) 
+	if (IsKeyDown(KEY_W)) 
 		moveCharacter(0, -speed);
-	if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) 
+	if (IsKeyDown(KEY_S)) 
 		moveCharacter(0, speed);
-	if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) 
+	if (IsKeyDown(KEY_A)) 
 		moveCharacter(-speed, 0);
-	if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) 
+	if (IsKeyDown(KEY_D)) 
 		moveCharacter(speed, 0);
 
-	for(std::shared_ptr<Weapon> weapon : this->weapons)
-		weapon->update();
+	
+	if(IsKeyDown(KEY_UP))
+		weapons[0]->shoot((Vector2){0, 1});
+	if(IsKeyDown(KEY_DOWN))
+		weapons[0]->shoot((Vector2){0, -1});
+	if(IsKeyDown(KEY_RIGHT))
+		weapons[0]->shoot((Vector2){-1, 0});
+	if(IsKeyDown(KEY_LEFT))
+		weapons[0]->shoot((Vector2){1, 0});
 
+
+	for(std::shared_ptr<Weapon> weapon : this->weapons)
+		weapon->update(characters);
+
+	Character::updateCharacter(characters);
 }
 Vector2 Player::getPosition(){
 	return this->position;

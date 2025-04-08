@@ -1,4 +1,6 @@
 #include "Character.h"
+#include <deque>
+#include <memory>
 #ifndef _RAYLIB
 #define _RAYLIB
 #include <raylib.h>
@@ -6,6 +8,7 @@
 
 void Character::drawCharacter(){
 	this->textures->drawTexture(this->texture, this->position.x, this->position.y);
+	DrawRectangle(bbox.x, bbox.y, bbox.width, bbox.height, PINK);
 	//DrawTexture(textures->getTexture(this->texture), this->position.x, this->position.y, WHITE);
 }
 void Character::moveCharacter(float x, float y){
@@ -13,9 +16,13 @@ void Character::moveCharacter(float x, float y){
 	this->position.y += y;
 	
 }
-
+Rectangle& Character::getBbox(){
+	return this->bbox;
+}
 //TODO: Tee tänne toiminnallisuutta pelin tekemisen edetessä
-void Character::updateCharacter(){
+void Character::updateCharacter(std::deque<std::shared_ptr<Character>>*characters){
+	this->bbox.x = this->position.x;
+	this->bbox.y = this->position.y;
 	/*float speed = 1.0f;
 	bool movingHorizontally = IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT);
 	bool movingVertically = IsKeyDown(KEY_W) || IsKeyDown(KEY_UP) || IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN);
@@ -29,4 +36,10 @@ void Character::updateCharacter(){
 	if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) moveCharacter(-speed, 0);
 	if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) moveCharacter(speed, 0);
 	*/
+}
+void Character::kill(){
+	this->shouldBeKilled = 1;
+}
+bool Character::getKilled(){
+	return this->shouldBeKilled;
 }

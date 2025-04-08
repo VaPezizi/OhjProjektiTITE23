@@ -1,8 +1,10 @@
 #include "Enemy.h"
+#include <deque>
+#include <memory>
 #include <raymath.h>
 #include <iostream>
 
-void Enemy::updateCharacter(){
+void Enemy::updateCharacter(std::deque<std::shared_ptr<Character>>*characters){
 
 	//Ensiksi lasketaan suunta vihusta pelaajaan
 	/*Vector2 moveDirection = Vector2Subtract(player->getPosition(), this->position);
@@ -18,5 +20,6 @@ void Enemy::updateCharacter(){
 	this->position = moveDirection;
 
 	//moveCharacter(moveDirection.x, moveDirection.y);
+	Character::updateCharacter(characters);
 }
 Enemy::~Enemy(){}
