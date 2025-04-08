@@ -138,11 +138,17 @@ void Game::updateGame() {
 
 	}
 
+	if (IsKeyPressed(KEY_G)) {
+        makeGameOverScene();
+        currentScene = scenes.size() - 1;  // Vaihdetaan juuri luotuun sceneen
+        isGameRunning = false;
+    }
+
 	//TODO: Ehkä tän vois laittaa omaan funktioon, tai jopa menu luokkaan samalla lailla, kun piirto
 
 	for(Nappi& n : this->scenes[currentScene].getMenu().getButtons()){
 		if(n.isClicked()){
-			if(n.getText() == "start"){
+			if(n.getText() == "start" || n.getText() == "restart"){
 				currentScene = 1;
 				isGameRunning = true;
 			}
@@ -157,6 +163,7 @@ void Game::updateGame() {
 			if(n.getText() == "resize"){
 				toggleFullScreen();
 			}
+
 		}
 		
 	}
@@ -181,6 +188,18 @@ void Game::makeGameScene(){
 
 	scene.addPlayer(400.0f, 400.0f, "assets/testTexture.png");
 	scene.addEnemy(500.0f, 500.0f, 0.3f, "assets/poffuTexture.png"); 
+	scene.setBackground("assets/grassTexture.png");
+}
+
+void Game::makeGameOverScene() {
+    scenes.push_back(Scene(&this->textureManager));
+    Scene& scene = scenes.back();
+
+    // Lisää Game Over -teksti ja napit
+    Menu& menu = scene.getMenu();
+    menu.addText(Text("Game Over", (Vector2){200, 200}, 64, RED));
+    menu.addButton(Nappi(200, 300, 150, 50, "restart", GREEN));
+    menu.addButton(Nappi(400, 300, 150, 50, "exit", RED));
 	scene.setBackground("assets/grassTexture.png");
 }
 

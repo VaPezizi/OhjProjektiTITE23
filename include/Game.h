@@ -76,6 +76,7 @@ public:
 	void toggleFullScreen(); // Toggle fullscreen
 	void makeGameScene();	
 	void makeMenu2();
+	void makeGameOverScene(); // Create the Game Over scene
 	
 };
 #endif

@@ -23,7 +23,7 @@ void Text::setPos(const float x, const float y){
 	this->position = (Vector2){x, y};
 }
 void Text::draw(){
-	DrawText(this->text.c_str(), this->position.x, this->position.y, 10, BLACK);
+    DrawText(this->text.c_str(), (int)this->position.x, (int)this->position.y, this->fontSize, this->color);
 }
 void Text::setColor(Color& color){
 	this->color = color;
