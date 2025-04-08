@@ -1,6 +1,7 @@
 #ifndef _ENEMY
 #define _ENEMY
 #include "Character.h"
+#include <deque>
 #include <memory>
 #include <raylib.h>
 #include "Player.h"
@@ -19,7 +20,7 @@ public:
 	Vector2 getPosition() const;// {
         //return this->position;
     	//}
-	virtual void updateCharacter();
+	virtual void updateCharacter(std::deque<std::shared_ptr<Character>>*characters);
 	
 	virtual ~Enemy();
 };

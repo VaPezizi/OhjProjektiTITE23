@@ -1,3 +1,5 @@
+#include <deque>
+#include <memory>
 #ifndef _RAYLIB
 #include <raylib.h>
 #define _RAYLIB
@@ -18,6 +20,8 @@ protected:
 	Vector2 position;
 	std::string texture;
 	TextureManager * textures;
+	bool shouldBeKilled;
+	Rectangle bbox;
 
 public:
 	Character(const float& posX, const float& posY, const std::string& fileName, TextureManager * textures){
@@ -25,6 +29,9 @@ public:
 		this->texture = fileName;
 		this->textures = textures;
 		textures->loadTexture(fileName);
+		Texture2D texture = textures->getTexture(fileName);
+		shouldBeKilled = 0;
+		this->bbox = (Rectangle){this->position.x, this->position.y, (float) texture.width, (float) texture.height};
 	}
 	virtual ~Character(){
 	}
@@ -33,12 +40,13 @@ public:
 		return *this;
 	}
 	virtual void drawCharacter();
-
+	void kill();
 	//Used to move the character by x and y values. 
 	void moveCharacter(float x, float y);
-
+	Rectangle& getBbox();
 	//Used to update the character.
-	virtual void updateCharacter();		//Virtual method that derived classes can override. 
+	virtual void updateCharacter(std::deque<std::shared_ptr<Character>>*characters);		//Virtual method that derived classes can override. 
+	bool getKilled();
 
 };
 #endif

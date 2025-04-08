@@ -9,8 +9,7 @@
 #include <cmath> // For floor function
 
 Scene::Scene(TextureManager* textureManager) { // TODO: Lisää tänne taustakuva
-    this->characters = std::vector<std::shared_ptr<Character>>();
-    characters.reserve(50);
+    this->characters = std::deque<std::shared_ptr<Character>>();
     this->menu = Menu();
     this->textureManager = textureManager;
     this->backgroundTexture = { 0 }; // Initialize background texture
@@ -27,7 +26,7 @@ Scene::~Scene() {
     }
 }
 
-Scene::Scene(Menu& menu, std::vector<std::shared_ptr<Character>>& characters, TextureManager* textureManager) {
+Scene::Scene(Menu& menu, std::deque<std::shared_ptr<Character>>& characters, TextureManager* textureManager) {
     this->menu = menu;
     this->characters = characters;
     this->textureManager = textureManager;
@@ -150,9 +149,19 @@ void Scene::draw() {
 
     EndMode2D(); // End drawing with the camera
 }
-std::vector<std::shared_ptr<Character>>& Scene::getCharacters(){
-	return this->characters;
+std::deque<std::shared_ptr<Character>>* Scene::getCharacters(){
+	return &this->characters;
 }
 std::shared_ptr<Player> Scene::getPlayer(){
 	return this->player;
 }
+/*
+void Scene::collisionUpdate(){
+	for(auto it = characters.begin(); it != characters.end();){
+		if((*it)->getKilled()){
+			it=characters.erase(it);
+		}else{
+			++it;
+		}
+	}
+}*/

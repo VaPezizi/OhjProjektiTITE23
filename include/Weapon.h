@@ -1,10 +1,11 @@
 #ifndef _WEAPON
 #define _WEAPON
+#include <deque>
+#include <memory>
 #include <string>
 #include <vector>
 #include "raylib.h"
 #include "Character.h"
-//TODO: koko luokka pitää toteuttaa, tein vaan nopeesti tän nii saa ton inventory slotin tehtyä
 class Weapon{
 protected:
 	Vector2 * playerPos;
@@ -24,7 +25,7 @@ public:
 	}
 
 	virtual void shoot(const Vector2& direction) = 0;
-	virtual void update() = 0;
+	virtual void update(std::deque<std::shared_ptr<Character>>* characters) = 0;
 	virtual void draw() = 0;
 };
 #endif
