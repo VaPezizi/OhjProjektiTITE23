@@ -8,8 +8,8 @@
 
 void Character::drawCharacter(){
 	this->textures->drawTexture(this->texture, this->position.x, this->position.y);
-	DrawRectangle(bbox.x, bbox.y, bbox.width, bbox.height, PINK);
-	//DrawTexture(textures->getTexture(this->texture), this->position.x, this->position.y, WHITE);
+	//DrawRectangle(bbox.x, bbox.y, bbox.width, bbox.height, PINK);
+	DrawTexture(textures->getTexture(this->texture), this->position.x, this->position.y, WHITE);
 }
 void Character::moveCharacter(float x, float y){
 	this->position.x += x;
@@ -43,3 +43,26 @@ void Character::kill(){
 bool Character::getKilled(){
 	return this->shouldBeKilled;
 }
+
+void Character::updateExperience() {
+    static double lastXpIncreaseTime = 0;
+    double currentTime = GetTime();
+
+    if (IsKeyPressed(KEY_E) && currentTime - lastXpIncreaseTime >= 0.5) {
+        lastXpIncreaseTime = currentTime;
+        experiencePoints += 20;
+
+        if (experiencePoints >= xpThreshold) {
+            experiencePoints -= xpThreshold;
+            level++;
+            xpThreshold += 50;
+        }
+    }
+}
+
+void Character::resetStats() {
+    experiencePoints = 0;
+    level = 1;
+    xpThreshold = 100;
+}
+
