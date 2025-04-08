@@ -33,6 +33,7 @@ void Game::initGame(const char* windowName){
 	makeMainMenu();
 	//makeMenu2();
 	makeGameScene();
+        makeGameOverScene();
 	startMainLoop();
 
 }
@@ -77,6 +78,17 @@ void Game::closeGame(){
 	CloseWindow();
 	exit(0);
 }
+void Game::gameOver(){
+	Scene& scene = scenes[currentScene];
+	this->scenes[currentScene].getCharacters()->clear();
+	scene.addPlayer(400.0f, 400.0f, "assets/testTexture.png");
+	scene.addEnemy(500.0f, 500.0f, 0.3f, "assets/poffuTexture.png"); 
+
+
+	this->currentScene = scenes.size() - 1;	//Nopeesti tehty tää, viimmene scene on gameover scene, siks size - 1
+        isGameRunning = false;
+	
+}
 
 void Game::updateGame() {
 	scenes[currentScene].updateCamera(); // Update the camera in the current scene
@@ -93,9 +105,9 @@ void Game::updateGame() {
 	if(currentScene == 1){
 
 		std::shared_ptr<Player> player = scenes[currentScene].getPlayer();
-		if(player->getKilled())
-			closeGame();
-
+		if(player->getKilled()){
+			gameOver();
+		}
 		std::deque<std::shared_ptr<Character>>& characters = *this->scenes[currentScene].getCharacters();
 		for(auto it = characters.begin(); it != characters.end();){
 			if((*it) != player){
@@ -139,9 +151,7 @@ void Game::updateGame() {
 	}
 
 	if (IsKeyPressed(KEY_G)) {
-        makeGameOverScene();
-        currentScene = scenes.size() - 1;  // Vaihdetaan juuri luotuun sceneen
-        isGameRunning = false;
+		gameOver();
     }
 
 	//TODO: Ehkä tän vois laittaa omaan funktioon, tai jopa menu luokkaan samalla lailla, kun piirto
