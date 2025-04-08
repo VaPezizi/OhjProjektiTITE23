@@ -200,6 +200,7 @@ void Game::makeGameOverScene() {
     menu.addText(Text("Game Over", (Vector2){200, 200}, 64, RED));
     menu.addButton(Nappi(200, 300, 150, 50, "restart", GREEN));
     menu.addButton(Nappi(400, 300, 150, 50, "exit", RED));
+	scene.setBackground("assets/grassTexture.png");
 }
 
 void Game::makeMenu2(){
