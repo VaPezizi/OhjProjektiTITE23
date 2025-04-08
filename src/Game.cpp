@@ -79,34 +79,43 @@ void Game::closeGame(){
 }
 
 void Game::updateGame() {
-    scenes[currentScene].updateCamera(); // Update the camera in the current scene
+	scenes[currentScene].updateCamera(); // Update the camera in the current scene
 
-    /*for (std::shared_ptr<Character>& character : this->scenes[currentScene].getCharacters()) {
-        character->updateCharacter();
-    }*/
-    std::deque<std::shared_ptr<Character>>& characters = *this->scenes[currentScene].getCharacters();
-    for(auto it = characters.begin(); it != characters.end();){
-	(*it)->updateCharacter(&characters);
-	if((*it)->getKilled()){
-		std::cout << "Erase p 1\n";
-		it = characters.erase(it);
-
-		std::cout << "Erase p 2\n";
-	}else{
-		++it;
+	if (IsKeyPressed(KEY_F11)) {
+		toggleFullScreen();
 	}
-    }
-
-    if (IsKeyPressed(KEY_F11)) {
-        toggleFullScreen();
-    }
 	if (currentScene == 0 && IsKeyPressed(KEY_ENTER)) { // entterillä pelaan
-        currentScene = 1; 
-        isGameRunning = true;
-    }
+		currentScene = 1; 
+		isGameRunning = true;
+	}
 
 	//Temporary solution for enemy spawning		TODO: Make this good code :D
 	if(currentScene == 1){
+
+		std::shared_ptr<Player> player = scenes[currentScene].getPlayer();
+		if(player->getKilled())
+			closeGame();
+
+		std::deque<std::shared_ptr<Character>>& characters = *this->scenes[currentScene].getCharacters();
+		for(auto it = characters.begin(); it != characters.end();){
+			if((*it) != player){
+				if(CheckCollisionRecs(player->getBbox(), (*it)->getBbox()))
+					player->kill();
+			}
+
+			(*it)->updateCharacter(&characters);
+
+			if((*it)->getKilled()){
+				std::cout << "Erase p 1\n";
+				it = characters.erase(it);
+
+				std::cout << "Erase p 2\n";
+			}else{
+				++it;
+			}
+		}
+
+
 		spawnTime += GetFrameTime();
 
 		if(spawnTime > difficultyScale){
@@ -126,6 +135,7 @@ void Game::updateGame() {
 
 			this->scenes[currentScene].addEnemy(playerPos.x + (50 * x), playerPos.y + (50 * y), 0.3f, "assets/poffuTexture.png");
 		}
+
 	}
 
 	//TODO: Ehkä tän vois laittaa omaan funktioon, tai jopa menu luokkaan samalla lailla, kun piirto
@@ -170,7 +180,7 @@ void Game::makeGameScene(){
 	menu.addButton(Nappi(100, 150, 150, 50, "exit", RED));	
 
 	scene.addPlayer(400.0f, 400.0f, "assets/testTexture.png");
-	scene.addEnemy(450.0f, 450.0f, 0.3f, "assets/poffuTexture.png"); 
+	scene.addEnemy(500.0f, 500.0f, 0.3f, "assets/poffuTexture.png"); 
 	scene.setBackground("assets/grassTexture.png");
 }
 
