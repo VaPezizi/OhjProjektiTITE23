@@ -77,6 +77,7 @@ public:
 	void makeGameScene();	
 	void makeMenu2();
 	void makeGameOverScene(); // Create the Game Over scene
+	void gameOver();
 	
 };
 #endif
