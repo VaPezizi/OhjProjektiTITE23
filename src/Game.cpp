@@ -29,8 +29,10 @@ void Game::initGame(const char* windowName){
 
 	ui = new UIElement(&scenes[currentScene].getCamera(), (Vector2){0, 0});
 	soundManager.loadSound("background", "assets/sounds/bg.mp3"); // Load background sound
+	soundManager.loadSound("doomost", "assets/doom.mp3");
  	soundManager.playSound("background"); // Play background sound
 	
+
 	makeMainMenu();
 	//makeMenu2();
 	makeGameScene();
@@ -150,8 +152,11 @@ void Game::updateGame(){
 		std::deque<std::shared_ptr<Character>>& characters = *this->scenes[currentScene].getCharacters();
 		for(auto it = characters.begin(); it != characters.end();){
 			if((*it) != player){
-				if(CheckCollisionRecs(player->getBbox(), (*it)->getBbox()))
+				if(CheckCollisionRecs(player->getBbox(), (*it)->getBbox())){
+					//if(player->
 					player->kill();
+
+				}
 			}
 
 			(*it)->updateCharacter(&characters);
@@ -198,6 +203,8 @@ void Game::updateGame(){
 	for(Nappi& n : this->scenes[currentScene].getMenu().getButtons()){
 		if(n.isClicked()){
 			if(n.getText() == "start" || n.getText() == "restart"){
+				this->soundManager.playSound("doomost");
+
 				currentScene = 1;
 				isGameRunning = true;
 			}
@@ -257,7 +264,7 @@ void Game::makeGameScene(){
 
 	Menu& menu = scene.getMenu();
 	//menu.addButton(Nappi(100, 50, 150, 50, "resize", BLUE));	
-	menu.addButton(Nappi(100, 150, 150, 50, "GLHF xdd ", RED));	
+	//menu.addButton(Nappi(100, 150, 150, 50, "GLHF xdd ", RED));	
 
 	scene.addPlayer(400.0f, 400.0f, "assets/testTexture.png");
 	scene.addEnemy(500.0f, 500.0f, 0.3f, "assets/poffuTexture.png"); 

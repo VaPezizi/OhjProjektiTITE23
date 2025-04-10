@@ -4,7 +4,7 @@
 
 void Wand::shoot(const Vector2& direction){
 	if(shootTimer <= 0){
-		this->projectiles.push_back(Projectile(*this->playerPos, direction, 10.0f, 0.5f, 5.0f));	
+		this->projectiles.push_back(Projectile(*this->playerPos, direction, 5.0f, 0.5f, 5.0f));	
 		shootTimer = this->firerate;
 	}
 }

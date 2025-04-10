@@ -20,7 +20,7 @@ public:
 		this->damage = damage;
 		this->range = range;
 		this->firerate = firerate;	
-		this->shootTimer = 5.0f;	
+		this->shootTimer = 1.0f;	
 		this->playerPos = playerPos;
 	}
 
