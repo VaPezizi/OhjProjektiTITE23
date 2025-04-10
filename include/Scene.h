@@ -8,10 +8,12 @@
 #include "Player.h"
 #include <memory>
 #include "raylib.h"
+#include "UIElement.h"
 
 class Scene {
 private:
     std::deque<std::shared_ptr<Character>> characters;
+    std::shared_ptr<UIElement> ui; // UI element for the scene
     TextureManager* textureManager;
     Menu menu;
     std::string taustaKuva;

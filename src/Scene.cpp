@@ -7,9 +7,11 @@
 #include <memory>
 #include "Enemy.h"
 #include <cmath> // For floor function
+#include "UIElement.h"
 
-Scene::Scene(TextureManager* textureManager) { // TODO: Lisää tänne taustakuva
+Scene::Scene(TextureManager* textureManager) {
     this->characters = std::deque<std::shared_ptr<Character>>();
+    this->ui = std::make_shared<UIElement>(&camera, (Vector2){0, 0});
     this->menu = Menu();
     this->textureManager = textureManager;
     this->backgroundTexture = { 0 }; // Initialize background texture
@@ -98,12 +100,14 @@ Menu& Scene::getMenu(){
 void Scene::updateCamera() {
     if (player) {
         camera.target = player->getPosition(); // Update the camera target to follow the player
-    }else{
+        ui->setPlayerPosition(player->getPosition()); // Update HUD position to follow the player
+    } else {
         camera.target = camera.offset; // Default target position if no player is set
     }
 
     // Update the camera offset to center the screen
     camera.offset = { (float)GetScreenWidth() / 2, (float)GetScreenHeight() / 2 };
+    
 }
 
 Camera2D& Scene::getCamera() {
@@ -129,10 +133,7 @@ void Scene::draw() {
         int startY = static_cast<int>(floor(cameraTop / tileHeight));
         int endX = static_cast<int>(ceil(cameraRight / tileWidth));
         int endY = static_cast<int>(ceil(cameraBottom / tileHeight));
-        // kameran debuggaus stringit
-		//std::cout << "Camera bounds: Left=" << cameraLeft << ", Top=" << cameraTop
-        //  << ", Right=" << cameraRight << ", Bottom=" << cameraBottom << std::endl;
-		//std::cout << "Drawing tile at: (" << camera.target.x * tileWidth << ", " << camera.target.y * tileHeight << ")" << std::endl;
+
         // Draw the tiles
         for (int x = startX; x < endX; ++x) {
             for (int y = startY; y < endY; ++y) {
@@ -146,6 +147,14 @@ void Scene::draw() {
     for (std::shared_ptr<Character>& c : this->characters) {
         c->drawCharacter();
     }
+
+    // Update the timer in the HUD
+    static float elapsedTime = 0.0f;
+    elapsedTime += GetFrameTime(); // Increment elapsed time by the time since the last frame
+    ui->setDisplayedTime(static_cast<int>(elapsedTime)); // Update the displayed time in seconds
+
+    // Draw HUD (UI)
+    ui->draw();
 
     EndMode2D(); // End drawing with the camera
 }
