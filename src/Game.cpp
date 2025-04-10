@@ -187,7 +187,7 @@ void Game::updateGame(){
 			if(rand() % 11 < 5)
 				y *= -1;
 
-			difficultyScale -= 0.1;
+			difficultyScale *= 0.95;
 
 			this->scenes[currentScene].addEnemy(playerPos.x + (50 * x), playerPos.y + (50 * y), 0.3f, "assets/poffuTexture.png");
 		}
