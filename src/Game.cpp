@@ -5,6 +5,8 @@
 #include <memory>
 #include <ctime>
 #include <cstdlib>
+#include <math.h>
+#include <ostream>
 
 #ifndef _VECTOR
 #define _VECTOR
@@ -178,18 +180,29 @@ void Game::updateGame(){
 			Vector2 playerPos = this->scenes[currentScene].getPlayer()->getPosition();
 			spawnTime = 0;
 			
-						
-			int x = rand()%10 + 2;	
+					
+			float radius = 500.0f;	//How far the enemies will spawn
+
+			/*int x = rand()%10 + 2;	
 			int y = rand()%10 + 2;
 
 			if(rand() % 11 < 5)
 				x *= -1;
 			if(rand() % 11 < 5)
 				y *= -1;
+			*/
+			if(difficultyScale > 0.5f)	//Max difficulty scale
+			       	difficultyScale *= 0.95;
 
-			difficultyScale *= 0.95;
+			int num = rand()%360 + 1;		//Random numero väliltä 0 - 360
+			Vector2 newPos = (Vector2){(float) playerPos.x + radius * std::cos(num * (PI / 180)),		//Lasketaan spawnattavan vihun sijainti ottamalla
+				(float) playerPos.y + radius * std::sin(num * (PI / 180))};				//satunnaisella kulmalla pelaajan ympäriltä sijainnin
+																
+			this->scenes[currentScene].addEnemy(newPos.x, newPos.y, 0.3f, "assets/poffuTexture.png");
 
-			this->scenes[currentScene].addEnemy(playerPos.x + (50 * x), playerPos.y + (50 * y), 0.3f, "assets/poffuTexture.png");
+			std::cout << "New pos: X: " << newPos.x << " Y: " << newPos.y << std::endl;
+
+//			this->scenes[currentScene].addEnemy(playerPos.x + (50 * newPos.x), playerPos.y + (50 * y), 0.3f, "assets/poffuTexture.png");
 		}
 
 	}
