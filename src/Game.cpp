@@ -59,7 +59,7 @@ void Game::startMainLoop(){
 		this->drawGame();
 	}
 }
-
+/*
 void Game::drawHealthBar(int x, int y, int width, int height, int currentHP, int maxHP) {
 	float hpPercent = (float)currentHP / maxHP;
 	Color barColor;
@@ -78,6 +78,7 @@ void Game::drawHealthBar(int x, int y, int width, int height, int currentHP, int
 	// Draw border
 	DrawRectangleLines(x, y, width, height, BLACK);
 }
+	*/
 	
 
 //All drawing should be done in this function
@@ -207,7 +208,7 @@ void Game::updateGame(){
 
 	}
 
-	if (IsKeyPressed(KEY_G)) {
+	if (currentScene == 1 && IsKeyPressed(KEY_G)) {
 		gameOver();
     }
 
@@ -343,10 +344,10 @@ void Game::toggleFullScreen() {
         ToggleFullscreen();
     }
 
-    updateButtonPositions(); // 🔹 Päivitetään nappien paikat, kun ruudun koko muuttuu!
+    //pdateButtonPositions(); // Päivitetään nappien paikat, kun ruudun koko muuttuu!
 }
 
-
+/*
 void Game::updateButtonPositions() {
     int screenWidth = GetScreenWidth();   // Haetaan nykyinen ruudun leveys
     int screenHeight = GetScreenHeight(); // Haetaan nykyinen ruudun korkeus
@@ -365,6 +366,6 @@ void Game::updateButtonPositions() {
         }
     }
 }
-
+*/
 
 
