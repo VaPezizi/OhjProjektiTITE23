@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include <string>
 #include "Text.h"
+#include <iostream>
 
 class UIElement {
 protected:
@@ -13,6 +14,7 @@ protected:
     // HUD-tiedot
     int playerHealth = 100;
     int playerMaxHealth = 100;
+    
     int level = 1;
     int currentXP = 0;
     int xpThreshold = 40;
@@ -45,6 +47,10 @@ public:
     void setXpThreshold(int threshold) { xpThreshold = threshold; }
     void setDisplayedTime(int time) { displayedTime = time; }
     void setPlayerPosition(const Vector2& playerPos); // New method to update player position
+
+    int getPlayerHealth() const { return playerHealth; } // Getter for player health
+    int getPlayerMaxHealth() const { return playerMaxHealth; } // Getter for player max health
+    float getHpPercent() const { return static_cast<float>(playerHealth) / playerMaxHealth; } // Getter for health percentage
 
     // Päivittää tekstien sisältöä ja sijainteja
     void updateTexts();
