@@ -1,0 +1,1 @@
+-IC:/OhjelmistoProjekti/OhjProjektiTITE23/include -IC:/OhjelmistoProjekti/OhjProjektiTITE23/src -I"C:/OhjelmistoProjekti/OhjProjektiTITE23/build/_deps/raylib-src/src/external/glfw/include" -I"C:/OhjelmistoProjekti/OhjProjektiTITE23/build/_deps/raylib-src/src/external/glfw/src" -I"C:/OhjelmistoProjekti/OhjProjektiTITE23/build/_deps/raylib-build/raylib/external/glfw/src"

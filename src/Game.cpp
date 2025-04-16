@@ -78,6 +78,33 @@ void Game::drawHealthBar(int x, int y, int width, int height, int currentHP, int
 	// Draw border
 	DrawRectangleLines(x, y, width, height, BLACK);
 }
+
+void Game::addXP(int xp) {
+    if (!ui) return;
+
+    int current = ui->getCurrentXP();
+    int level = ui->getLevel();
+    int threshold = ui->getXpThreshold();
+
+    current += xp;
+
+    // Tason nousu mahdollisesti useita kertoja
+    while (current >= threshold) {
+        level++;
+        threshold += 40;  // Threshold kasvaa joka tasolla 40 yksikköä
+        std::cout << "Level up! Uusi taso: " << level << std::endl;
+    }
+
+    // Päivitetään UI:n tila
+    ui->setCurrentXP(current);
+    ui->setLevel(level);
+    ui->setXpThreshold(threshold);
+    ui->updateTexts();
+}
+
+
+
+
 	
 
 //All drawing should be done in this function
@@ -98,8 +125,6 @@ void Game::drawGame(){
 
 	//menu.draw();
 	scenes[currentScene].draw();
-	
-	
 
 	/*for(std::shared_ptr<Character>& c : characters){
 		//c.drawCharacter(&this->textureManager);
@@ -134,11 +159,14 @@ void Game::gameOver(){
 void Game::updateGame(){
 	scenes[currentScene].updateCamera(); // Update the camera in the current scene
 
-    
+	if (ui) {
+        ui->updateTexts(); // <-- tärkeä
+    }
 
 	if (IsKeyPressed(KEY_F11)) {
 		toggleFullScreen();
 	}
+	
 	if (currentScene == 0 && IsKeyPressed(KEY_ENTER)) { // entterillä pelaan
 		currentScene = 1; 
 		isGameRunning = true;
@@ -204,7 +232,7 @@ void Game::updateGame(){
 
 //			this->scenes[currentScene].addEnemy(playerPos.x + (50 * newPos.x), playerPos.y + (50 * y), 0.3f, "assets/poffuTexture.png");
 		}
-
+		
 	}
 
 	if (IsKeyPressed(KEY_G)) {
@@ -274,6 +302,9 @@ void Game::makeGameScene(){
 
 	scenes.push_back(Scene(&this->textureManager));
 	Scene& scene = scenes.back();
+
+	scene.setGame(this);
+	this->ui = scene.getUI();
 
 	Menu& menu = scene.getMenu();
 	//menu.addButton(Nappi(100, 50, 150, 50, "resize", BLUE));	

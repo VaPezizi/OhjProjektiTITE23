@@ -49,6 +49,9 @@ protected:
 
 	double lastResizeTime = 0; // Last resize time
 
+	bool showXPMessage = false;
+    float xpMessageTimer = 0.0f;
+
 	
 private:
 	int currentScene;
@@ -94,6 +97,7 @@ public:
 
 	void drawHealthBar(int x, int y, int width, int height, int currentHP, int maxHP);
 	void takeDamage(int amount);
+	void addXP(int amount);
 	
 	void makeGameScene();	
 
