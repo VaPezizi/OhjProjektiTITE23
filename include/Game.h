@@ -64,6 +64,7 @@ private:
 
     float elapsedTime;
     int displayedTime;
+	int finalSurvivalTime = 0;
 	
 	bool isPaused = false; // Is paused
 
@@ -105,6 +106,9 @@ public:
     void resetHealth();
 	void makeGameOverScene(); // Create the Game Over scene
 	void gameOver();
+
+	void resetTimer();
+	float getElapsedTime() const;
 
 };
 #endif

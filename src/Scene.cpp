@@ -160,9 +160,9 @@ void Scene::draw() {
     }
 
     // Update the timer in the HUD
-    static float elapsedTime = 0.0f;
-    elapsedTime += GetFrameTime(); // Increment elapsed time by the time since the last frame
-    ui->setDisplayedTime(static_cast<int>(elapsedTime)); // Update the displayed time in seconds
+    //static float elapsedTime = 0.0f;
+    //elapsedTime += GetFrameTime(); // Increment elapsed time by the time since the last frame
+    //ui->setDisplayedTime(static_cast<int>(elapsedTime)); // Update the displayed time in seconds
 
     // Draw HUD (UI)
     ui->draw();
