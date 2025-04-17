@@ -39,7 +39,12 @@ void Player::updateCharacter(std::deque<std::shared_ptr<Character>>*characters){
 }
 Vector2 Player::getPosition(){
 	return this->position;
-}/*
+}
+void Player::addWeapon(std::shared_ptr<Weapon> weapon) {
+    if (this->weapons.size() < this->inventorySpace)
+        this->weapons.push_back(weapon);
+}
+/*
 void Player::addWeapon(const Weapon& weapon){
 	this->weapons.push_back(weapon);
 }

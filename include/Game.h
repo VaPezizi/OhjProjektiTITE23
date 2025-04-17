@@ -49,6 +49,9 @@ protected:
 
 	double lastResizeTime = 0; // Last resize time
 
+	bool showXPMessage = false;
+    float xpMessageTimer = 0.0f;
+
 	
 private:
 	int currentScene;
@@ -61,6 +64,7 @@ private:
 
     float elapsedTime;
     int displayedTime;
+	int finalSurvivalTime = 0;
 	
 	bool isPaused = false; // Is paused
 
@@ -94,6 +98,7 @@ public:
 
 	void drawHealthBar(int x, int y, int width, int height, int currentHP, int maxHP);
 	void takeDamage(int amount);
+	void addXP(int amount);
 	
 	void makeGameScene();	
 
@@ -101,6 +106,9 @@ public:
     void resetHealth();
 	void makeGameOverScene(); // Create the Game Over scene
 	void gameOver();
+
+	void resetTimer();
+	float getElapsedTime() const;
 
 };
 #endif

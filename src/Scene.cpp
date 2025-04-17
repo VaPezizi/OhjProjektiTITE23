@@ -60,10 +60,21 @@ void Scene::addPlayer(float posX, float posY, const char* fileName){
 		this->textureManager
 		));
 
-	//std::cout << "MORO\n";
-	this->characters.push_back(c);
-	player = c;
-}
+        Vector2* playerPos = &c->getPositionRef();
+        
+        std::shared_ptr<Weapon> wand = std::make_shared<Wand>(
+            10.0f,
+            100.0f,
+            0.5f,
+            &c->getPositionRef(),
+            this->game
+        );
+        
+    
+        c->addWeapon(wand);
+        this->characters.push_back(c);
+        player = c;
+    }
 
 void Scene::addEnemy(float posX, float posY, float speed, const char* fileName){
 	std::shared_ptr<Enemy> c(new Enemy(
@@ -149,9 +160,9 @@ void Scene::draw() {
     }
 
     // Update the timer in the HUD
-    static float elapsedTime = 0.0f;
-    elapsedTime += GetFrameTime(); // Increment elapsed time by the time since the last frame
-    ui->setDisplayedTime(static_cast<int>(elapsedTime)); // Update the displayed time in seconds
+    //static float elapsedTime = 0.0f;
+    //elapsedTime += GetFrameTime(); // Increment elapsed time by the time since the last frame
+    //ui->setDisplayedTime(static_cast<int>(elapsedTime)); // Update the displayed time in seconds
 
     // Draw HUD (UI)
     ui->draw();

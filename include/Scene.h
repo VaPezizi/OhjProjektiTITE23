@@ -10,6 +10,8 @@
 #include "raylib.h"
 #include "UIElement.h"
 
+class Game;
+
 class Scene {
 private:
     std::deque<std::shared_ptr<Character>> characters;
@@ -20,6 +22,7 @@ private:
     Texture2D backgroundTexture; // Texture for the background image
     std::shared_ptr<Player> player;
     Camera2D camera; // Camera object
+    Game* game = nullptr;
 
 public:
     Scene(TextureManager* textureManager);
@@ -41,6 +44,9 @@ public:
     void updateCamera(); // Update the camera's target
     Camera2D& getCamera(); // Get the camera object
     //void collisionUpdate();
+    void setGame(Game* gamePtr) { this->game = gamePtr; }
+    UIElement* getUI() { return ui.get(); }
+
 };
 
 #endif

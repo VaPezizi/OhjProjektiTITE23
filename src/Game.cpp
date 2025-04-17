@@ -78,6 +78,33 @@ void Game::drawHealthBar(int x, int y, int width, int height, int currentHP, int
 	// Draw border
 	DrawRectangleLines(x, y, width, height, BLACK);
 }
+
+void Game::addXP(int xp) {
+    if (!ui) return;
+
+    int current = ui->getCurrentXP();
+    int level = ui->getLevel();
+    int threshold = ui->getXpThreshold();
+
+    current += xp;
+
+    // Tason nousu mahdollisesti useita kertoja
+    while (current >= threshold) {
+        level++;
+        threshold += 40;  // Threshold kasvaa joka tasolla 40 yksikköä
+        std::cout << "Level up! Uusi taso: " << level << std::endl;
+    }
+
+    // Päivitetään UI:n tila
+    ui->setCurrentXP(current);
+    ui->setLevel(level);
+    ui->setXpThreshold(threshold);
+    ui->updateTexts();
+}
+
+
+
+
 	
 
 //All drawing should be done in this function
@@ -98,8 +125,6 @@ void Game::drawGame(){
 
 	//menu.draw();
 	scenes[currentScene].draw();
-	
-	
 
 	/*for(std::shared_ptr<Character>& c : characters){
 		//c.drawCharacter(&this->textureManager);
@@ -125,6 +150,25 @@ void Game::gameOver(){
 	scene.addPlayer(400.0f, 400.0f, "assets/testTexture.png");
 	scene.addEnemy(500.0f, 500.0f, 0.3f, "assets/poffuTexture.png"); 
 
+	
+	finalSurvivalTime = static_cast<int>(elapsedTime);
+
+
+	Menu& gameOverMenu = scenes.back().getMenu(); // scenes.back() = Game Over -scene
+	int minutes = finalSurvivalTime / 60;
+	int seconds = finalSurvivalTime % 60;
+
+	char buffer[32];
+    sprintf(buffer, "Selvisit: %02d:%02d", minutes, seconds);
+    std::string survivalTextStr(buffer);
+
+    for (Text& t : gameOverMenu.getTexts()) {
+        if (t.getText().find("Selvisit:") != std::string::npos) {
+            t.setText(survivalTextStr);
+            break;
+        }
+    }
+
 
 	this->currentScene = scenes.size() - 1;	//Nopeesti tehty tää, viimmene scene on gameover scene, siks size - 1
         isGameRunning = false;
@@ -134,11 +178,20 @@ void Game::gameOver(){
 void Game::updateGame(){
 	scenes[currentScene].updateCamera(); // Update the camera in the current scene
 
-    
+	if (ui) {
+        ui->updateTexts(); 
+    }
+
+	if (isGameRunning) {
+		elapsedTime += GetFrameTime();
+		if (ui) ui->setDisplayedTime(static_cast<int>(elapsedTime));
+	}
+	
 
 	if (IsKeyPressed(KEY_F11)) {
 		toggleFullScreen();
 	}
+	
 	if (currentScene == 0 && IsKeyPressed(KEY_ENTER)) { // entterillä pelaan
 		currentScene = 1; 
 		isGameRunning = true;
@@ -204,7 +257,7 @@ void Game::updateGame(){
 
 //			this->scenes[currentScene].addEnemy(playerPos.x + (50 * newPos.x), playerPos.y + (50 * y), 0.3f, "assets/poffuTexture.png");
 		}
-
+		
 	}
 
 	if (IsKeyPressed(KEY_G)) {
@@ -220,6 +273,7 @@ void Game::updateGame(){
 
 				currentScene = 1;
 				isGameRunning = true;
+				resetTimer();
 			}
 			if(n.getText() == "exit" && !isGameRunning){
 				//currentScene = 1;
@@ -275,6 +329,9 @@ void Game::makeGameScene(){
 	scenes.push_back(Scene(&this->textureManager));
 	Scene& scene = scenes.back();
 
+	scene.setGame(this);
+	this->ui = scene.getUI();
+
 	Menu& menu = scene.getMenu();
 	//menu.addButton(Nappi(100, 50, 150, 50, "resize", BLUE));	
 	//menu.addButton(Nappi(100, 150, 150, 50, "GLHF xdd ", RED));	
@@ -290,7 +347,10 @@ void Game::makeGameOverScene() {
 
     // Lisää Game Over -teksti ja napit
     Menu& menu = scene.getMenu();
+
     menu.addText(Text("Game Over", (Vector2){200, 200}, 64, RED));
+	menu.addText(Text("Selvisit: 00:00", (Vector2){200, 250}, 24, WHITE));
+
     menu.addButton(Nappi(200, 300, 150, 50, "restart", GREEN));
     menu.addButton(Nappi(400, 300, 150, 50, "exit", RED));
 	scene.setBackground("assets/grassTexture.png");
@@ -365,6 +425,15 @@ void Game::updateButtonPositions() {
         }
     }
 }
+
+void Game::resetTimer() {
+    elapsedTime = 0.0f;
+}
+
+float Game::getElapsedTime() const {
+    return elapsedTime;
+}
+
 
 
 

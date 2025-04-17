@@ -16,8 +16,20 @@ int Projectile::update(std::deque<std::shared_ptr<Character>>* characters){
 		return 1;
 	}
 
+	bool isFirst = true;
+    for (auto it = characters->begin(); it != characters->end(); ++it) {
+        if (isFirst) {
+            isFirst = false;
+            continue; 
+        }
 
-	//Ruma ratkasu, älä kato:DD
+		if (CheckCollisionRecs((*it)->getBbox(), bbox)) {
+			(*it)->kill();
+			std::cout << "killed enemy :D\n";
+			return 2; 
+		}		
+    }
+	/*//Ruma ratkasu, älä kato:DD
 	auto it = characters->begin();
 	if(it != characters->end())
 		++it;
