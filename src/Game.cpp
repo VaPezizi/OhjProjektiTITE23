@@ -75,7 +75,28 @@ void Game::drawHealthBar(int x, int y, int width, int height, int currentHP, int
 	// Draw border
 	DrawRectangleLines(x, y, width, height, BLACK);
 }
-	
+void Game::addXP(int xp) {
+    if (!ui) return;
+
+    int current = ui->getCurrentXP();
+    int level = ui->getLevel();
+    int threshold = ui->getXpThreshold();
+
+    current += xp;
+
+    // Tason nousu mahdollisesti useita kertoja
+    while (current >= threshold) {
+        level++;
+        threshold += 40;  // Threshold kasvaa joka tasolla 40 yksikköä
+        std::cout << "Level up! Uusi taso: " << level << std::endl;
+    }
+
+    // Päivitetään UI:n tila
+    ui->setCurrentXP(current);
+    ui->setLevel(level);
+    ui->setXpThreshold(threshold);
+    ui->updateTexts();
+}
 
 //All drawing should be done in this function
 void Game::drawGame(){
