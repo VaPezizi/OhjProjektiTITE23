@@ -21,13 +21,16 @@ public:
 		//Varataan muistia 5 aseelle
 	//	weapons.reserve(5);	
 		this->inventorySpace = 5;
-		this->weapons.push_back(std::shared_ptr<Weapon>(new Wand(5.0f, 10.0f, 0.5f, &this->position)));
+		//this->weapons.push_back(std::shared_ptr<Weapon>(new Wand(5.0f, 10.0f, 0.5f, &this->position)));
 	}
 	Vector2 getPosition();//{
 //        return this->position;
  //   }
+ 	Vector2& getPositionRef() { return this->position; }
+
 	virtual void updateCharacter(std::deque<std::shared_ptr<Character>>*characters) override;
-	void addWeapon(const Weapon& weapon);
+	//void addWeapon(const Weapon& weapon);
+	void addWeapon(std::shared_ptr<Weapon> weapon);
 	const std::vector<Weapon>& getWeapons();
 	const int& getInventorySpace();	
 	void drawCharacter() override;

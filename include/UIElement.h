@@ -47,6 +47,11 @@ public:
     void setXpThreshold(int threshold) { xpThreshold = threshold; }
     void setDisplayedTime(int time) { displayedTime = time; }
     void setPlayerPosition(const Vector2& playerPos); // New method to update player position
+    int getCurrentXP() const { return currentXP; }
+    int getLevel() const { return level; }
+    int getXpThreshold() const { return xpThreshold; }
+
+
 
     int getPlayerHealth() const { return playerHealth; } // Getter for player health
     int getPlayerMaxHealth() const { return playerMaxHealth; } // Getter for player max health
