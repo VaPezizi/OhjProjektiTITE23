@@ -30,6 +30,7 @@ void Game::initGame(const char* windowName){
 
 	ui = new UIElement(&scenes[currentScene].getCamera(), (Vector2){0, 0});
 	soundManager.loadSound("background", "assets/sounds/bg.mp3"); // Load background sound
+	soundManager.loadSound("doomost", "assets/doom.mp3");
  	soundManager.playSound("background"); // Play background sound
 	
 	makeMainMenu();
@@ -192,7 +193,7 @@ void Game::updateGame(){
             if ((*it) != player) {
                 if (CheckCollisionRecs(player->getBbox(), (*it)->getBbox())) {
                     int health = ui->getPlayerHealth(); // Get current player health
-                    ui->setPlayerHealth(health - 50); // Decrease player health 
+                    ui->setPlayerHealth(health - 20); // Decrease player health 
                     std::cout << "AUTTAKAA, MINUUN OSUI! health: " << ui->getPlayerHealth();
 					std::cout << " "<< ui->getHpPercent()<< std::endl;
 
@@ -384,27 +385,6 @@ void Game::toggleFullScreen() {
         ToggleFullscreen();
     }
 
-    updateButtonPositions(); // 🔹 Päivitetään nappien paikat, kun ruudun koko muuttuu!
-}
-
-
-void Game::updateButtonPositions() {
-    int screenWidth = GetScreenWidth();   // Haetaan nykyinen ruudun leveys
-    int screenHeight = GetScreenHeight(); // Haetaan nykyinen ruudun korkeus
-
-    std::cout << "Päivitetään nappien sijainnit: " << screenWidth << "x" << screenHeight << std::endl;
-
-    for (Nappi& n : this->scenes[currentScene].getMenu().getButtons()) {
-        if (n.getText() == "start") {
-            n.setPosition(screenWidth / 2 - 75, screenHeight / 2 - 100); // Keskitetään
-        } 
-        else if (n.getText() == "exit") {
-            n.setPosition(screenWidth / 2 - 75, screenHeight / 2); // Keskitetään start-napin alle
-        }
-        else if (n.getText() == "resize") {
-            n.setPosition(screenWidth / 2 - 75, screenHeight / 2 + 100); // Keskitetään vielä alemmas
-        }
-    }
 }
 
 void Game::resetTimer() {
