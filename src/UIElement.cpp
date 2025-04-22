@@ -1,6 +1,7 @@
 #include "UIElement.h"
 #include <raylib.h>
 #include <string>
+#include <iostream>
 
 void UIElement::setPlayerPosition(const Vector2& playerPos) {
     position = playerPos; // Update the position to the player's position
@@ -44,20 +45,19 @@ void UIElement::draw() {
     float hudY = position.y - 250;          // 250px above the player
 
     // Draw health bar
-    float hpPercent = (float)playerHealth / playerMaxHealth;
     Color barColor = GREEN;
-    if (hpPercent > 0.7f)
+    if (getHpPercent() > 0.7f)
         barColor = GREEN;
-    else if (hpPercent > 0.4f)
+    else if (getHpPercent() > 0.4f)
         barColor = YELLOW;
-    else if (hpPercent > 0.2f)
+    else if (getHpPercent() > 0.2f)
         barColor = ORANGE;
     else
         barColor = RED;
 
     DrawRectangle(hudX, hudY - 50, barWidth, 50, WHITE);
     DrawRectangle(hudX, hudY, barWidth, barHeight, WHITE);
-    DrawRectangle(hudX + 1, hudY + 1, (int)((barWidth - 2) * hpPercent), barHeight - 2, barColor);
+    DrawRectangle(hudX + 1, hudY + 1, (int)((barWidth) * getHpPercent()), barHeight, barColor);
     DrawRectangleLines(hudX, hudY, barWidth, barHeight, BLACK);
 
     // Update and draw texts

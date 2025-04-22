@@ -147,7 +147,7 @@ void Scene::draw() {
 
         // Draw the tiles
         for (int x = startX; x < endX; ++x) {
-            for (int y = startY; y < endY; ++y) {
+            for (int y = startY; y <= endY; ++y) { // added extra line of textures
                 DrawTexture(backgroundTexture, x * tileWidth, y * tileHeight, WHITE);
             }
         }

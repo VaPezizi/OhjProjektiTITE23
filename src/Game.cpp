@@ -4,9 +4,8 @@
 #include <iostream>
 #include <memory>
 #include <ctime>
+#include <cmath>
 #include <cstdlib>
-#include <math.h>
-#include <ostream>
 
 #ifndef _VECTOR
 #define _VECTOR
@@ -34,11 +33,10 @@ void Game::initGame(const char* windowName){
 	soundManager.loadSound("doomost", "assets/doom.mp3");
  	soundManager.playSound("background"); // Play background sound
 	
-
 	makeMainMenu();
 	//makeMenu2();
 	makeGameScene();
-        makeGameOverScene();
+    makeGameOverScene();
 	startMainLoop();
 
 }
@@ -78,7 +76,6 @@ void Game::drawHealthBar(int x, int y, int width, int height, int currentHP, int
 	// Draw border
 	DrawRectangleLines(x, y, width, height, BLACK);
 }
-
 void Game::addXP(int xp) {
     if (!ui) return;
 
@@ -102,11 +99,6 @@ void Game::addXP(int xp) {
     ui->updateTexts();
 }
 
-
-
-
-	
-
 //All drawing should be done in this function
 void Game::drawGame(){
 	
@@ -126,13 +118,8 @@ void Game::drawGame(){
 	//menu.draw();
 	scenes[currentScene].draw();
 
-	/*for(std::shared_ptr<Character>& c : characters){
-		//c.drawCharacter(&this->textureManager);
-		c->drawCharacter();
-	}*/	
 	EndDrawing();
 }
-
 //Put everything you want to do before the game closes here
 //(If you use memory, you should free it here, if nowhere else)
 void Game::closeGame(){
@@ -149,6 +136,7 @@ void Game::gameOver(){
 	this->scenes[currentScene].getCharacters()->clear();
 	scene.addPlayer(400.0f, 400.0f, "assets/testTexture.png");
 	scene.addEnemy(500.0f, 500.0f, 0.3f, "assets/poffuTexture.png"); 
+	ui->setPlayerHealth(100); // Reset player health to 100
 
 	
 	finalSurvivalTime = static_cast<int>(elapsedTime);
@@ -159,15 +147,15 @@ void Game::gameOver(){
 	int seconds = finalSurvivalTime % 60;
 
 	char buffer[32];
-    sprintf(buffer, "Selvisit: %02d:%02d", minutes, seconds);
-    std::string survivalTextStr(buffer);
+	sprintf(buffer, "Selvisit: %02d:%02d", minutes, seconds);
+	std::string survivalTextStr(buffer);
 
-    for (Text& t : gameOverMenu.getTexts()) {
-        if (t.getText().find("Selvisit:") != std::string::npos) {
-            t.setText(survivalTextStr);
-            break;
-        }
-    }
+	for (Text& t : gameOverMenu.getTexts()) {
+		if (t.getText().find("Selvisit:") != std::string::npos) {
+			t.setText(survivalTextStr);
+			break;
+		}
+	}
 
 
 	this->currentScene = scenes.size() - 1;	//Nopeesti tehty tää, viimmene scene on gameover scene, siks size - 1
@@ -197,57 +185,52 @@ void Game::updateGame(){
 		isGameRunning = true;
 	}
 
-	//Temporary solution for enemy spawning		TODO: Make this good code :D
-	if(currentScene == 1){
+    //Temporary solution for enemy spawning		TODO: Make this good code :D
+    if (currentScene == 1) {
+        std::shared_ptr<Player> player = scenes[currentScene].getPlayer();
+        std::deque<std::shared_ptr<Character>>& characters = *this->scenes[currentScene].getCharacters();
+        for (auto it = characters.begin(); it != characters.end();) {
+            if ((*it) != player) {
+                if (CheckCollisionRecs(player->getBbox(), (*it)->getBbox())) {
+                    int health = ui->getPlayerHealth(); // Get current player health
+                    ui->setPlayerHealth(health - 20); // Decrease player health 
+                    std::cout << "AUTTAKAA, MINUUN OSUI! health: " << ui->getPlayerHealth();
+					std::cout << " "<< ui->getHpPercent()<< std::endl;
 
-		std::shared_ptr<Player> player = scenes[currentScene].getPlayer();
-		if(player->getKilled()){
-			gameOver();
-		}
-		std::deque<std::shared_ptr<Character>>& characters = *this->scenes[currentScene].getCharacters();
-		for(auto it = characters.begin(); it != characters.end();){
-			if((*it) != player){
-				if(CheckCollisionRecs(player->getBbox(), (*it)->getBbox())){
-					//if(player->
-					player->kill();
+					TODO: // HP Prosentti ei näy hudissa
 
-				}
-			}
+                    (*it)->kill(); // Kill the enemy after
 
-			(*it)->updateCharacter(&characters);
+                    if (ui->getPlayerHealth() <= 0) {
+                        gameOver(); // Call game over logic after the loop
+            			return;
+                    }
+                }
+            }
 
-			if((*it)->getKilled()){
-				std::cout << "Erase p 1\n";
-				it = characters.erase(it);
+            (*it)->updateCharacter(&characters);
 
-				std::cout << "Erase p 2\n";
-			}else{
-				++it;
-			}
-		}
+            if ((*it)->getKilled()) {
+                it = characters.erase(it);
+            } else {
+                ++it;
+            }
+        }
 
 
-		spawnTime += GetFrameTime();
 
-		if(spawnTime > difficultyScale){
-			Vector2 playerPos = this->scenes[currentScene].getPlayer()->getPosition();
-			spawnTime = 0;
-			
-					
-			float radius = 500.0f;	//How far the enemies will spawn
+        spawnTime += GetFrameTime();
 
-			/*int x = rand()%10 + 2;	
-			int y = rand()%10 + 2;
+        if (spawnTime > difficultyScale) {
+            Vector2 playerPos = this->scenes[currentScene].getPlayer()->getPosition();
+            spawnTime = 0;
 
-			if(rand() % 11 < 5)
-				x *= -1;
-			if(rand() % 11 < 5)
-				y *= -1;
-			*/
+            
 			if(difficultyScale > 0.5f)	//Max difficulty scale
 			       	difficultyScale *= 0.95;
 
 			int num = rand()%360 + 1;		//Random numero väliltä 0 - 360
+			float radius = 500.0f; // Define and initialize radius
 			Vector2 newPos = (Vector2){(float) playerPos.x + radius * std::cos(num * (PI / 180)),		//Lasketaan spawnattavan vihun sijainti ottamalla
 				(float) playerPos.y + radius * std::sin(num * (PI / 180))};				//satunnaisella kulmalla pelaajan ympäriltä sijainnin
 																
@@ -260,11 +243,11 @@ void Game::updateGame(){
 		
 	}
 
-	if (IsKeyPressed(KEY_G)) {
-		gameOver();
+    if (currentScene == 1 && IsKeyPressed(KEY_G)) {
+        gameOver();
     }
 
-	//TODO: Ehkä tän vois laittaa omaan funktioon, tai jopa menu luokkaan samalla lailla, kun piirto
+    //TODO: Ehkä tän vois laittaa omaan funktioon, tai jopa menu luokkaan samalla lailla, kun piirto
 
 	for(Nappi& n : this->scenes[currentScene].getMenu().getButtons()){
 		if(n.isClicked()){
@@ -334,7 +317,6 @@ void Game::makeGameScene(){
 
 	Menu& menu = scene.getMenu();
 	//menu.addButton(Nappi(100, 50, 150, 50, "resize", BLUE));	
-	//menu.addButton(Nappi(100, 150, 150, 50, "GLHF xdd ", RED));	
 
 	scene.addPlayer(400.0f, 400.0f, "assets/testTexture.png");
 	scene.addEnemy(500.0f, 500.0f, 0.3f, "assets/poffuTexture.png"); 
@@ -403,27 +385,6 @@ void Game::toggleFullScreen() {
         ToggleFullscreen();
     }
 
-    updateButtonPositions(); // 🔹 Päivitetään nappien paikat, kun ruudun koko muuttuu!
-}
-
-
-void Game::updateButtonPositions() {
-    int screenWidth = GetScreenWidth();   // Haetaan nykyinen ruudun leveys
-    int screenHeight = GetScreenHeight(); // Haetaan nykyinen ruudun korkeus
-
-    std::cout << "Päivitetään nappien sijainnit: " << screenWidth << "x" << screenHeight << std::endl;
-
-    for (Nappi& n : this->scenes[currentScene].getMenu().getButtons()) {
-        if (n.getText() == "start") {
-            n.setPosition(screenWidth / 2 - 75, screenHeight / 2 - 100); // Keskitetään
-        } 
-        else if (n.getText() == "exit") {
-            n.setPosition(screenWidth / 2 - 75, screenHeight / 2); // Keskitetään start-napin alle
-        }
-        else if (n.getText() == "resize") {
-            n.setPosition(screenWidth / 2 - 75, screenHeight / 2 + 100); // Keskitetään vielä alemmas
-        }
-    }
 }
 
 void Game::resetTimer() {

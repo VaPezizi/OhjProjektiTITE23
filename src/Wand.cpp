@@ -3,6 +3,7 @@
 #include <deque>
 #include <memory>
 
+
 void Wand::shoot(const Vector2& direction){
 	if(shootTimer <= 0){
 		this->projectiles.push_back(Projectile(*this->playerPos, direction, 5.0f, 0.5f, 5.0f));	
@@ -16,7 +17,7 @@ void Wand::update(std::deque<std::shared_ptr<Character>>* characters) {
 		int result = it->update(characters);
 
         if (result == 2 && game) {
-            game->addXP(20); // XP:tä vain jos oikeasti osui viholliseen
+            game->addXP(20); // XP:tä vain jos oikeasti osui viholliseen TODO: ei toimi
             it = projectiles.erase(it);
         } else if (result == 1) {
             it = projectiles.erase(it); // Poistetaan vain vanhentunut ammus
