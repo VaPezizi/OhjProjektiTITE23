@@ -6,6 +6,8 @@
 #include <ctime>
 #include <cmath>
 #include <cstdlib>
+#include <fstream>
+#include <string>
 
 #ifndef _VECTOR
 #define _VECTOR
@@ -131,6 +133,31 @@ void Game::closeGame(){
 	CloseWindow();
 	exit(0);
 }
+void Game::createSaveFile(const int amount){
+	std::ofstream newFile("record.txt");
+	newFile << std::to_string(amount);
+	newFile.close();
+}
+//Returns 1 when new record is achieved
+int Game::saveScore(const int amount, std::ifstream& stream, const std::string& fileName){
+	std::string fileText;	
+	if(stream.peek() == std::ifstream::traits_type::eof()){		//Check for empty file
+		stream.close();
+		createSaveFile(amount);
+		std::cout << "Tehdaan\n";
+		return 1;
+	}
+	while(std::getline(stream, fileText)){
+		int record = std::stoi(fileText);
+		if(record < this->finalSurvivalTime){
+			createSaveFile(amount);
+			std::cout << "Uusi ennätys!\n";
+			return 1;
+		}
+	}
+	return 0;
+	
+}
 void Game::gameOver(){
 	Scene& scene = scenes[currentScene];
 	this->scenes[currentScene].getCharacters()->clear();
@@ -160,7 +187,27 @@ void Game::gameOver(){
 
 	this->currentScene = scenes.size() - 1;	//Nopeesti tehty tää, viimmene scene on gameover scene, siks size - 1
         isGameRunning = false;
+
+
+	//Ennätysten tallennus
+	std::string fileName = "record.txt";
+	std::ifstream file(fileName);
 	
+	if(file){
+		if(saveScore(finalSurvivalTime, file, fileName)){
+			//Tiiän et tyhmä käydä kaks kertaa läpi, mut ihan sama.
+			for(Text& text : gameOverMenu.getTexts()){
+				if(text.getText().find("Ei uutta ennätystä") != std::string::npos){
+					std::string onnittelu = "Uusi ennätys, onnittelut :)";
+					text.setText(onnittelu);
+					break;
+				}
+			}			
+		}
+	}else{
+		std::cout << "No file found, creating one\n";
+		createSaveFile(finalSurvivalTime);
+	}
 }
 
 void Game::updateGame(){
@@ -197,7 +244,7 @@ void Game::updateGame(){
                     std::cout << "AUTTAKAA, MINUUN OSUI! health: " << ui->getPlayerHealth();
 					std::cout << " "<< ui->getHpPercent()<< std::endl;
 
-					TODO: // HP Prosentti ei näy hudissa
+					//TODO: // HP Prosentti ei näy hudissa
 
                     (*it)->kill(); // Kill the enemy after
 
@@ -332,6 +379,7 @@ void Game::makeGameOverScene() {
 
     menu.addText(Text("Game Over", (Vector2){200, 200}, 64, RED));
 	menu.addText(Text("Selvisit: 00:00", (Vector2){200, 250}, 24, WHITE));
+	menu.addText(Text("Ei uutta ennätystä :(", (Vector2){200, 275}, 24, WHITE));
 
     menu.addButton(Nappi(200, 300, 150, 50, "restart", GREEN));
     menu.addButton(Nappi(400, 300, 150, 50, "exit", RED));
