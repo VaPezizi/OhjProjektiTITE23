@@ -15,4 +15,4 @@ You can Download cmake at [cmake.org](https://cmake.org/download/)
 When Cmake is installed, simply run open a terminal at the project root and run:  
 
     $ cmake -B build   
-    $ cmake -- build build  
+    $ cmake --build build  
