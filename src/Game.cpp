@@ -164,8 +164,12 @@ void Game::gameOver(){
 	scene.addPlayer(400.0f, 400.0f, "assets/testTexture.png");
 	scene.addEnemy(500.0f, 500.0f, 0.3f, "assets/poffuTexture.png"); 
 	ui->setPlayerHealth(100); // Reset player health to 100
-
+	this->ui->setCurrentXP(0);	//Resetting this to 40
+	this->ui->setXpThreshold(40);
+	this->ui->setLevel(1);
 	
+	this->difficultyScale = 5.0f;
+
 	finalSurvivalTime = static_cast<int>(elapsedTime);
 
 
@@ -196,6 +200,7 @@ void Game::gameOver(){
 	if(file){
 		if(saveScore(finalSurvivalTime, file, fileName)){
 			//Tiiän et tyhmä käydä kaks kertaa läpi, mut ihan sama.
+			//3 kertaa ny :DD (Toisaalta, vaan yks suoritetaan, niin ei kiinnosta)
 			for(Text& text : gameOverMenu.getTexts()){
 				if(text.getText().find("Ei uutta ennätystä") != std::string::npos){
 					std::string onnittelu = "Uusi ennätys, onnittelut :)";
@@ -203,9 +208,26 @@ void Game::gameOver(){
 					break;
 				}
 			}			
+		}else{
+			for(Text& text : gameOverMenu.getTexts()){
+				if(text.getText().find("Uusi ennätys, onnittelut :)") != std::string::npos){
+					std::string onnittelu = "Ei uutta ennätystä";
+					text.setText(onnittelu);
+					break;
+				}
+			}	
 		}
 	}else{
 		std::cout << "No file found, creating one\n";
+		for(Text& text : gameOverMenu.getTexts()){
+				if(text.getText().find("Uusi ennätys, onnittelut :)") != std::string::npos){
+					std::string onnittelu = "Ei uutta ennätystä";
+					text.setText(onnittelu);
+					break;
+				}
+			}	
+
+				
 		createSaveFile(finalSurvivalTime);
 	}
 }

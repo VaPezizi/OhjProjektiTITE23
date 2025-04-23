@@ -60,11 +60,11 @@ private:
 	TextureManager textureManager;
 	void resetToMainMenu(); // Reset to main menu
 	void updateTimer();   // Updates the game timer to track elapsed time
-    void updateExperience();  // Updates the player's experience points
+	void updateExperience();  // Updates the player's experience points
 	void resetGameStats();  // Resets all game statistics to their default values
 
-    float elapsedTime;
-    int displayedTime;
+	float elapsedTime;
+	int displayedTime;
 	int finalSurvivalTime = 0;
 	
 	bool isPaused = false; // Is paused
@@ -105,7 +105,7 @@ public:
 	void makeGameScene();	
 
 	void makeMenu2();
-    void resetHealth();
+	void resetHealth();
 	void makeGameOverScene(); // Create the Game Over scene
 	void gameOver();
 
