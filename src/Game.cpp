@@ -220,8 +220,8 @@ void Game::gameOver(){
 	}else{
 		std::cout << "No file found, creating one\n";
 		for(Text& text : gameOverMenu.getTexts()){
-				if(text.getText().find("Uusi ennätys, onnittelut :)") != std::string::npos){
-					std::string onnittelu = "Ei uutta ennätystä";
+				if(text.getText().find("Ei uutta ennätystä") != std::string::npos){
+					std::string onnittelu = "Uusi ennätys, onnittelut :)";
 					text.setText(onnittelu);
 					break;
 				}
