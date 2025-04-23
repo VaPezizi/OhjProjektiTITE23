@@ -1,3 +1,4 @@
+#include <fstream>
 #ifndef _RAYLIB
 #include <raylib.h> 
 #define _RAYLIB
@@ -87,6 +88,7 @@ public:
 	Vector2& getScreenDimensions();
 	void initGame(const char* windowName);	//Inits the game, with a given name
 	void closeGame();		//Closes the game, this is where frees should be called from, if nowhere else
+	int saveScore(const int amount, std::ifstream& stream, const std::string& fileName);
 	void startMainLoop();		//Runs the main loop
 	void makeMainMenu();
 	void drawGame();		//Most draw calls should be made / called from here
@@ -95,7 +97,7 @@ public:
 	void addPlayer(float posX, float posY, const char* fileName);
 	void addCharacter(float posX, float posY, const char* fileName);
 	void toggleFullScreen(); // Toggle fullscreen
-
+	void createSaveFile(const int amount);
 	void drawHealthBar(int x, int y, int width, int height, int currentHP, int maxHP);
 	void takeDamage(int amount);
 	void addXP(int amount);
